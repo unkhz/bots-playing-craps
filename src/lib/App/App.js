@@ -1,36 +1,36 @@
 import React from "react";
-import logo from "./logo.svg";
 
+import { Provider as ThemeProvider, Banner, Heading, Flex, Box } from "rebass";
 import ServerProvider from "lib/ServerProvider/ServerProvider";
+import Player from "lib/Player/Player";
 
 import "./App.css";
 
 const App = props => {
   return (
-    <ServerProvider
-      render={({ account }) => (
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
-          </header>
-          <div className="App-intro">
-            {account && (
-              <div>
-                <p>Account {account.account_id}</p>
-                <ul>
-                  {account.balances.map(b => (
-                    <li key={b.asset_type}>
-                      {b.asset_type}: {b.balance}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+    <ThemeProvider>
+      <ServerProvider
+        render={({ account }) => (
+          <div className="App">
+            <Banner
+              style={{ minHeight: "20vh" }}
+              color="white"
+              bg="gray8"
+              backgroundImage="https://images.unsplash.com/photo-1515606378517-3451a4fa2e12?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=cb830c394f6c9d7275b1662668f291dd&auto=format&fit=crop&w=800&q=80"
+            >
+              <Heading>Bots playing craps</Heading>
+            </Banner>
+            <Flex m={2} align="center">
+              {account && (
+                <Box w={1 / 2} m={2}>
+                  <Player account={account} />
+                </Box>
+              )}
+            </Flex>
           </div>
-        </div>
-      )}
-    />
+        )}
+      />
+    </ThemeProvider>
   );
 };
 
