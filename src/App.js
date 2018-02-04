@@ -13,7 +13,7 @@ class App extends Component {
 
   async componentDidMount() {
     const sdk = window.StellarSdk;
-    const server = new sdk.Server("https://horizon-testnet.stellar.org");
+    const server = new sdk.Server(process.env.REACT_APP_HORIZON_URL);
     Object.assign(str, { sdk, server });
     const id = store.get("accountID") || (await this.createNewAccount());
     str.keys = str.sdk.Keypair.fromSecret(id.secret);
@@ -24,7 +24,7 @@ class App extends Component {
   async createNewAccount() {
     const keys = str.sdk.Keypair.random();
     await (await fetch(
-      "https://horizon-testnet.stellar.org/friendbot?addr=" + keys.publicKey()
+      `${process.env.REACT_APP_HORIZON_URL}?addr=${keys.publicKey()}`
     )).json();
     const accountIdentity = {
       secret: keys.secret()
