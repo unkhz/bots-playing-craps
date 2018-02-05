@@ -4,8 +4,6 @@ import { Provider as ThemeProvider, Relative, Banner, Heading, Flex, Box, Button
 import ServerProvider from 'lib/ServerProvider/ServerProvider';
 import Player from 'lib/Player/Player';
 
-import './App.css';
-
 const App = (props) => {
   return (
     <ThemeProvider>
