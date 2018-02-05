@@ -1,6 +1,14 @@
 import React from "react";
 import { all as names } from "dog-names";
-import { Card, BackgroundImage, Subhead, Code, Link } from "rebass";
+import {
+  Panel,
+  PanelHeader,
+  BackgroundImage,
+  Subhead,
+  Code,
+  Toolbar,
+  NavLink
+} from "rebass";
 
 // @see http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
 const hashCode = str => {
@@ -26,19 +34,23 @@ const Player = ({ account }) => {
     actualUrl
   )}`;
   return (
-    <Card width="100%">
+    <Panel width="100%">
+      <PanelHeader>
+        <NavLink href={derefereredUrl}>
+          <Code style={{ whiteSpace: "pre", fontSize: 10 }}>
+            {account.account_id.match(/.{1,28}/g).join("\n")}
+          </Code>
+        </NavLink>
+      </PanelHeader>
       <BackgroundImage
-        ratio={1}
+        ratio={2 / 3}
         src={`https://robohash.org/${account.account_id}.png`}
+        style={{ height: "5vh" }}
       />
+
       <Subhead p={2}>{name}</Subhead>
-      <Link href={derefereredUrl}>
-        <Code style={{ whiteSpace: "pre", lineHeight: "-8px" }}>
-          {account.account_id.match(/.{1,14}/g).join("\n")}
-        </Code>
-      </Link>
       <Subhead p={3}>{Number(balance)} XLM</Subhead>
-    </Card>
+    </Panel>
   );
 };
 
