@@ -1,28 +1,24 @@
-import { Component } from "react";
-import invariant from "invariant";
-import store from "store";
-import update from "immutability-helper";
+import { Component } from 'react';
+import invariant from 'invariant';
+import store from 'store';
+import update from 'immutability-helper';
 
-const STORE_KEY_IDENTITIES = "identities";
+const STORE_KEY_IDENTITIES = 'identities';
 const IDENTITY_COUNT = 3;
 
-const randomInteger = (min, max) =>
-  min + Math.round(Math.random() * (max - min));
+const randomInteger = (min, max) => min + Math.round(Math.random() * (max - min));
 
 const makeABet = ({ account_id, balance }) => {
   return {
     account_id,
     amount: randomInteger(0, balance),
-    betOnPass: randomInteger(0, 100) > 50
+    betOnPass: randomInteger(0, 100) > 50,
   };
 };
 
-const mapServerStateToAccount = serverAccount => ({
+const mapServerStateToAccount = (serverAccount) => ({
   ...serverAccount,
-  balance: Number(
-    serverAccount.balances.find(({ asset_type }) => asset_type === "native")
-      .balance
-  )
+  balance: Number(serverAccount.balances.find(({ asset_type }) => asset_type === 'native').balance),
 });
 
 class ServerProvider extends Component {
@@ -35,59 +31,48 @@ class ServerProvider extends Component {
       server,
       bets: [],
       placeBets: this.placeBets,
-      roundStatus: "Idle"
+      roundStatus: 'Idle',
     });
     this.loadAccounts(sdk, server);
   }
 
   async loadAccounts(sdk, server) {
-    const identities =
-      store.get(STORE_KEY_IDENTITIES) ||
-      (await this.createAndStoreNewAccounts(sdk, IDENTITY_COUNT));
-    const serverAccounts = await Promise.all(
-      identities.map(({ publicKey }) => server.loadAccount(publicKey))
-    );
+    const identities = store.get(STORE_KEY_IDENTITIES) || (await this.createAndStoreNewAccounts(sdk, IDENTITY_COUNT));
+    const serverAccounts = await Promise.all(identities.map(({ publicKey }) => server.loadAccount(publicKey)));
     this.setState({
-      accounts: serverAccounts.map(mapServerStateToAccount)
+      accounts: serverAccounts.map(mapServerStateToAccount),
     });
   }
 
   placeBets = () => {
-    this.state.accounts.forEach(account => {
+    this.state.accounts.forEach((account) => {
       setTimeout(() => {
         const newState = update(this.state, {
-          bets: { $push: [makeABet(account)] }
+          bets: { $push: [makeABet(account)] },
         });
         this.setState(newState);
       }, randomInteger(1000, 5000));
     });
-    this.setState({ isRoundActive: true, roundStatus: "Placing bets" });
+    this.setState({ isRoundActive: true, roundStatus: 'Placing bets' });
   };
 
   async createAndStoreNewAccounts(sdk, count) {
-    const identities = await Promise.all(
-      Array.from(Array(count)).map(() => this.createNewAccount(sdk))
-    );
+    const identities = await Promise.all(Array.from(Array(count)).map(() => this.createNewAccount(sdk)));
     store.set(STORE_KEY_IDENTITIES, identities);
     return identities;
   }
 
   async createNewAccount(sdk) {
     const keys = sdk.Keypair.random();
-    await (await fetch(
-      `${process.env.REACT_APP_HORIZON_URL}/friendbot?addr=${keys.publicKey()}`
-    )).json();
+    await (await fetch(`${process.env.REACT_APP_HORIZON_URL}/friendbot?addr=${keys.publicKey()}`)).json();
     return {
       publicKey: keys.publicKey(),
-      secret: keys.secret()
+      secret: keys.secret(),
     };
   }
 
   render() {
-    invariant(
-      this.props.render,
-      "ServerProvider expects a render prop function"
-    );
+    invariant(this.props.render, 'ServerProvider expects a render prop function');
     return this.props.render(this.state || {});
   }
 }
