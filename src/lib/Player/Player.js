@@ -3,10 +3,11 @@ import { all as names } from "dog-names";
 import {
   Panel,
   PanelHeader,
+  PanelFooter,
   BackgroundImage,
   Subhead,
   Code,
-  Toolbar,
+  Text,
   NavLink
 } from "rebass";
 
@@ -22,11 +23,9 @@ const hashCode = str => {
   return hash;
 };
 
-const Player = ({ account }) => {
+const Player = ({ account, bets }) => {
   const name = names[Math.abs(hashCode(account.account_id)) % names.length];
-  const { balance } = account.balances.find(
-    ({ asset_type }) => asset_type === "native"
-  );
+  const bet = bets.find(({ account_id }) => account_id === account.account_id);
   const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${
     account.account_id
   }`;
@@ -48,8 +47,20 @@ const Player = ({ account }) => {
         style={{ height: "5vh" }}
       />
 
-      <Subhead p={2}>{name}</Subhead>
-      <Subhead p={3}>{Number(balance)} XLM</Subhead>
+      <Subhead m={1}>{name}</Subhead>
+      <Text fontSize={14} m={1}>
+        {Number(account.balance)} XLM
+      </Text>
+      <PanelFooter>
+        {bet ? (
+          <Text>
+            betting <b>{Number(bet.amount)} XLM</b> on{" "}
+            <b>{bet.betOnPass ? "pass" : "not pass"}</b>
+          </Text>
+        ) : (
+          <Text>---</Text>
+        )}
+      </PanelFooter>
     </Panel>
   );
 };

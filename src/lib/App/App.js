@@ -3,7 +3,6 @@ import React from "react";
 import {
   Provider as ThemeProvider,
   Relative,
-  Absolute,
   Banner,
   Heading,
   Flex,
@@ -20,12 +19,8 @@ const App = props => {
   return (
     <ThemeProvider>
       <ServerProvider
-        render={({ accounts }) => (
-          <Relative
-            style={{
-              textAlign: "center"
-            }}
-          >
+        render={({ accounts, roundStatus, isRoundActive, placeBets, bets }) => (
+          <Relative style={{ textAlign: "center" }}>
             <Banner
               style={{ minHeight: "20vh" }}
               color="white"
@@ -44,11 +39,22 @@ const App = props => {
                     flex="1 1 auto"
                     style={{ minWidth: 200, maxWidth: 300 }}
                   >
-                    <Player account={account} />
+                    <Player account={account} bets={bets} />
                   </Box>
                 ))}
             </Flex>
-            <Button style={{ cursor: "pointer" }} m={10}>
+
+            <Heading>{roundStatus}</Heading>
+            <Text fontSize={14} m={10}>
+              Pot:{" "}
+              {bets ? bets.reduce((sum, { amount }) => sum + amount, 0) : 0} XLM
+            </Text>
+            <Button
+              style={{ cursor: "pointer" }}
+              m={10}
+              disabled={isRoundActive}
+              onClick={placeBets}
+            >
               <Text fontSize={36} m={10} style={{ textTransform: "uppercase" }}>
                 Play
               </Text>
