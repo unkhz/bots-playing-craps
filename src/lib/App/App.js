@@ -12,7 +12,7 @@ const App = (props) => {
         render={({ accounts }) => (
           <GameProvider
             accounts={accounts}
-            render={({ roundStatus, isRoundActive, placeBets, bets }) => (
+            render={({ roundStatus, isRoundActive, placeBets, stop, bets, dice, winners }) => (
               <Relative style={{ textAlign: 'center' }}>
                 <Banner
                   style={{ minHeight: '20vh' }}
@@ -32,7 +32,11 @@ const App = (props) => {
                         flex="1 1 auto"
                         style={{ minWidth: 200, maxWidth: 300 }}
                       >
-                        <Player account={account} bets={bets} />
+                        <Player
+                          account={account}
+                          bets={bets}
+                          lastWin={winners && winners.find(({ account_id }) => account_id === account.account_id)}
+                        />
                       </Box>
                     ))}
                 </Flex>
@@ -41,9 +45,12 @@ const App = (props) => {
                 <Text fontSize={14} m={10}>
                   Pot: {bets ? bets.reduce((sum, { amount }) => sum + amount, 0) : 0} XLM
                 </Text>
-                <Button style={{ cursor: 'pointer' }} m={10} disabled={isRoundActive} onClick={placeBets}>
+                <Text fontSize={14} m={10}>
+                  Dice: {dice && dice.join(' ')}
+                </Text>
+                <Button style={{ cursor: 'pointer' }} m={10} onClick={isRoundActive ? stop : placeBets}>
                   <Text fontSize={36} m={10} style={{ textTransform: 'uppercase' }}>
-                    Play
+                    {isRoundActive ? 'STOP' : 'PLAY'}
                   </Text>
                 </Button>
               </Relative>

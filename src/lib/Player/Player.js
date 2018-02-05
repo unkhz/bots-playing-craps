@@ -14,7 +14,7 @@ const hashCode = (str) => {
   return hash;
 };
 
-const Player = ({ account, bets }) => {
+const Player = ({ account, bets, lastWin }) => {
   const name = names[Math.abs(hashCode(account.account_id)) % names.length];
   const bet = bets.find(({ account_id }) => account_id === account.account_id);
   const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${account.account_id}`;
@@ -38,8 +38,9 @@ const Player = ({ account, bets }) => {
             betting <b>{Number(bet.amount)} XLM</b> on <b>{bet.betOnPass ? 'pass' : 'not pass'}</b>
           </Text>
         ) : (
-          <Text>---</Text>
+          <Text>...</Text>
         )}
+        <Text>{!lastWin ? '...' : `Last win: ${lastWin.win}`}</Text>
       </PanelFooter>
     </Panel>
   );
