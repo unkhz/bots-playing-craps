@@ -10,7 +10,7 @@ const App = props => {
   return (
     <ThemeProvider>
       <ServerProvider
-        render={({ account }) => (
+        render={({ accounts }) => (
           <div className="App">
             <Banner
               style={{ minHeight: "20vh" }}
@@ -20,12 +20,19 @@ const App = props => {
             >
               <Heading>Bots playing craps</Heading>
             </Banner>
-            <Flex m={2} align="center">
-              {account && (
-                <Box w={1 / 2} m={2}>
-                  <Player account={account} />
-                </Box>
-              )}
+            <Flex wrap justify="center">
+              {accounts &&
+                accounts.map(account => (
+                  <Box
+                    key={account.account_id}
+                    w={1 / 4}
+                    m={2}
+                    flex="1 1 auto"
+                    style={{ minWidth: 175, maxWidth: 300 }}
+                  >
+                    <Player account={account} />
+                  </Box>
+                ))}
             </Flex>
           </div>
         )}

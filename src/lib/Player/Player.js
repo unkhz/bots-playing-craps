@@ -1,6 +1,6 @@
 import React from "react";
 import { all as names } from "dog-names";
-import { Card, BackgroundImage, Subhead, Code } from "rebass";
+import { Card, BackgroundImage, Subhead, Code, Link } from "rebass";
 
 // @see http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
 const hashCode = str => {
@@ -15,10 +15,16 @@ const hashCode = str => {
 };
 
 const Player = ({ account }) => {
-  const name = names[hashCode(account.account_id) % names.length];
+  const name = names[Math.abs(hashCode(account.account_id)) % names.length];
   const { balance } = account.balances.find(
     ({ asset_type }) => asset_type === "native"
   );
+  const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${
+    account.account_id
+  }`;
+  const derefereredUrl = `http://www.dereferer.org/?${encodeURIComponent(
+    actualUrl
+  )}`;
   return (
     <Card width="100%">
       <BackgroundImage
@@ -26,10 +32,12 @@ const Player = ({ account }) => {
         src={`https://robohash.org/${account.account_id}.png`}
       />
       <Subhead p={2}>{name}</Subhead>
-      <Code style={{ whiteSpace: "pre", lineHeight: "-8px" }}>
-        {account.account_id.match(/.{1,14}/g).join("\n")}
-      </Code>
-      <Subhead p={3}>{balance} XLM</Subhead>
+      <Link href={derefereredUrl}>
+        <Code style={{ whiteSpace: "pre", lineHeight: "-8px" }}>
+          {account.account_id.match(/.{1,14}/g).join("\n")}
+        </Code>
+      </Link>
+      <Subhead p={3}>{Number(balance)} XLM</Subhead>
     </Card>
   );
 };
