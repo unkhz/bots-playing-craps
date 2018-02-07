@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import invariant from 'invariant';
+import React, { Component } from 'react';
+import createContext from 'create-react-context';
 import store from 'store';
 
 const STORE_KEY_IDENTITIES = 'identities';
@@ -10,7 +10,11 @@ const mapServerStateToAccount = (serverAccount) => ({
   balance: Number(serverAccount.balances.find(({ asset_type }) => asset_type === 'native').balance),
 });
 
+export const ServerContext = createContext({});
+
 class ServerProvider extends Component {
+  state = { context: {} };
+
   async componentDidMount() {
     const sdk = window.StellarSdk;
     const server = new sdk.Server(process.env.REACT_APP_HORIZON_URL);
@@ -25,7 +29,9 @@ class ServerProvider extends Component {
     const identities = store.get(STORE_KEY_IDENTITIES) || (await this.createAndStoreNewAccounts(sdk, IDENTITY_COUNT));
     const serverAccounts = await Promise.all(identities.map(({ publicKey }) => server.loadAccount(publicKey)));
     this.setState({
-      accounts: serverAccounts.map(mapServerStateToAccount),
+      context: {
+        accounts: serverAccounts.map(mapServerStateToAccount),
+      },
     });
   }
 
@@ -45,8 +51,7 @@ class ServerProvider extends Component {
   }
 
   render() {
-    invariant(this.props.render, 'ServerProvider expects a render prop function');
-    return this.props.render(this.state || {});
+    return <ServerContext.Provider value={this.state.context}>{this.props.children}</ServerContext.Provider>;
   }
 }
 

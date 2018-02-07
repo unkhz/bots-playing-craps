@@ -1,7 +1,9 @@
-import { Component } from 'react';
-import invariant from 'invariant';
+import React, { Component } from 'react';
+import createContext from 'create-react-context';
 import update from 'immutability-helper';
 import StateMachine from 'javascript-state-machine';
+
+import { ServerContext } from 'lib/ServerProvider/ServerProvider';
 
 const sum = (dice) => dice.reduce((r, v) => r + v, 0);
 const randomInteger = (min, max) => min + Math.round(Math.random() * (max - min));
@@ -21,15 +23,21 @@ const STATE_ROLLING = 'rolling_dice';
 const STATE_REROLLING = 'rerolling';
 const STATE_COLLECTING_WINS = 'collecting_wins';
 
+export const GameContext = createContext({});
+
 class GameProvider extends Component {
-  constructor(...args) {
-    super(...args);
-    this.state = {
+  state = {
+    context: {
       bets: [],
       winners: [],
+      participants: [],
       placeBets: () => this.fsm.placeBets(),
       stop: () => this.setState({ shouldStop: true }),
-    };
+    },
+    bets: [],
+  };
+
+  componentDidMount() {
     this.fsm = new StateMachine({
       init: 'idle',
       transitions: [
@@ -54,6 +62,11 @@ class GameProvider extends Component {
         onStop: () => this.update(),
       },
     });
+    this.update();
+  }
+
+  componentWillReceiveProps(props) {
+    this.update({}, { participants: props.accounts });
   }
 
   handlePlaceBets = async () => {
@@ -64,7 +77,7 @@ class GameProvider extends Component {
         const newState = update(this.state, {
           bets: { $push: [makeABet(account)] },
         });
-        this.update(newState);
+        this.update(newState, { bets: newState.bets });
       })
     );
     const nextTransition = this.fsm.roll;
@@ -78,7 +91,7 @@ class GameProvider extends Component {
     const isNotPass = [2, 3, 12].includes(point);
     const isResolved = isPass || isNotPass;
     const nextTransition = isResolved ? this.fsm.collectWins : this.fsm.reRoll;
-    this.update({ dice, point, isPass, isNotPass, isResolved }, nextTransition);
+    this.update({ point, isPass, isNotPass, isResolved }, { dice }, nextTransition);
   };
 
   handleReRoll = () => {
@@ -89,7 +102,7 @@ class GameProvider extends Component {
     const isNotPass = result === 7;
     const isResolved = isPass || isNotPass;
     const nextTransition = isResolved ? this.fsm.collectWins : this.fsm.reRoll;
-    this.update({ dice, point, isPass, isNotPass, isResolved }, nextTransition);
+    this.update({ point, isPass, isNotPass, isResolved }, { dice }, nextTransition);
   };
 
   handleCollectWins = async () => {
@@ -101,15 +114,19 @@ class GameProvider extends Component {
       account_id,
       win: amount / totalWinningBets * pot,
     }));
-    this.update({ bets: [], dice: [], winners }, nextTransition);
+    this.update({ bets: [] }, { bets: [], dice: [], winners }, nextTransition);
   };
 
-  update = (newState = {}, nextTransition) => {
+  update = (newState = {}, newContext = {}, nextTransition) => {
     this.setState({
-      isRoundActive: this.fsm.state !== STATE_IDLE,
-      roundStatus: this.fsm.state,
       shouldStop: false,
       ...newState,
+      context: {
+        ...this.state.context,
+        ...newContext,
+        isRoundActive: this.fsm.state !== STATE_IDLE,
+        roundStatus: this.fsm.state,
+      },
     });
     if (this.state && this.state.shouldStop) {
       setImmediate(() => this.fsm.stop());
@@ -119,9 +136,11 @@ class GameProvider extends Component {
   };
 
   render() {
-    invariant(this.props.render, 'GameProvider expects a render prop function');
-    return this.props.render(this.state || {});
+    console.log('Rendering', this.state, this.props.accounts);
+    return <GameContext.Provider value={this.state.context}>{this.props.children}</GameContext.Provider>;
   }
 }
 
-export default GameProvider;
+export default (props) => (
+  <ServerContext.Consumer>{({ accounts }) => <GameProvider accounts={accounts} {...props} />}</ServerContext.Consumer>
+);
