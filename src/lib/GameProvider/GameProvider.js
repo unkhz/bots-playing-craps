@@ -55,11 +55,21 @@ class GameProvider extends Component {
         { name: 'stop', from: STATE_COLLECTING_WINS, to: STATE_IDLE },
       ],
       methods: {
-        onPlaceBets: this.handlePlaceBets,
-        onRoll: this.handleRoll,
-        onReRoll: this.handleReRoll,
-        onCollectWins: this.handleCollectWins,
-        onStop: () => this.update(),
+        onPlaceBets: () => {
+          this.handlePlaceBets();
+        },
+        onRoll: () => {
+          this.handleRoll();
+        },
+        onReRoll: () => {
+          this.handleReRoll();
+        },
+        onCollectWins: () => {
+          this.handleCollectWins();
+        },
+        onStop: () => {
+          this.update();
+        },
       },
     });
     this.update();
