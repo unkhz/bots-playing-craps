@@ -26,6 +26,7 @@ const STATE_COLLECTING_WINS = 'collecting_wins';
 export const GameContext = createContext({});
 
 class GameProvider extends Component {
+  operationTimeoutId = 0;
   state = {
     context: {
       bets: [],
@@ -79,6 +80,11 @@ class GameProvider extends Component {
     this.update({}, { participants: props.accounts });
   }
 
+  operate(action, min = 100, max = 1000) {
+    clearTimeout(this.operationTimeoutId);
+    this.operationTimeoutId = setTimeout(action.bind(this.fsm), randomInteger(min, max));
+  }
+
   handlePlaceBets = async () => {
     this.update();
     await Promise.all(
@@ -90,8 +96,7 @@ class GameProvider extends Component {
         this.update(newState, { bets: newState.bets });
       })
     );
-    const nextTransition = this.fsm.roll;
-    setTimeout(() => nextTransition.call(this.fsm), randomInteger(100, 1000));
+    this.operate(this.fsm.roll);
   };
 
   handleRoll = () => {
@@ -116,7 +121,7 @@ class GameProvider extends Component {
   };
 
   handleCollectWins = async () => {
-    const nextTransition = this.fsm.placeBets;
+    const nextTransition = this.fsm.stop;
     const pot = this.state.bets.reduce((r, { amount }) => r + amount, 0);
     const winnersWithBets = this.state.bets.filter((bet) => !(bet.betOnPass ^ this.state.isPass));
     const totalWinningBets = winnersWithBets.reduce((r, { amount }) => r + amount, 0);
@@ -129,7 +134,6 @@ class GameProvider extends Component {
 
   update = (newState = {}, newContext = {}, nextTransition) => {
     this.setState({
-      shouldStop: false,
       ...newState,
       context: {
         ...this.state.context,
@@ -138,11 +142,7 @@ class GameProvider extends Component {
         roundStatus: this.fsm.state,
       },
     });
-    if (this.state && this.state.shouldStop) {
-      setImmediate(() => this.fsm.stop());
-    } else {
-      nextTransition && setTimeout(() => nextTransition.call(this.fsm), randomInteger(100, 1000));
-    }
+    nextTransition && this.operate(nextTransition);
   };
 
   render() {

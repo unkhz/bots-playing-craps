@@ -48,9 +48,9 @@ const App = (props) => {
                   <Text fontSize={14} m={10}>
                     Dice: {dice && dice.join(' ')}
                   </Text>
-                  <Button style={{ cursor: 'pointer' }} m={10} onClick={isRoundActive ? stop : placeBets}>
+                  <Button style={{ cursor: 'pointer' }} m={10} disabled={isRoundActive} onClick={placeBets}>
                     <Text fontSize={36} m={10} style={{ textTransform: 'uppercase' }}>
-                      {isRoundActive ? 'STOP' : 'PLAY'}
+                      PLAY
                     </Text>
                   </Button>
                 </Fragment>
