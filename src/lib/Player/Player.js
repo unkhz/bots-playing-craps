@@ -21,12 +21,22 @@ const Player = ({ player, bets, lastWin }) => {
       <PanelFooter>
         {bet ? (
           <Text>
-            betting <b>{Number(bet.amount)} XLM</b> on <b>{bet.betOnPass ? 'pass' : 'not pass'}</b>
+            Bet ~{' '}
+            <b>
+              {Math.round(bet.amount)} XLM, {bet.betOnPass ? 'pass' : 'not pass'}
+            </b>
           </Text>
         ) : (
           <Text>...</Text>
         )}
-        <Text>{!lastWin ? '...' : `Last win: ${lastWin.win}`}</Text>
+
+        {lastWin ? (
+          <Text>
+            Won ~ <b>{Math.round(lastWin.win)} XLM</b>
+          </Text>
+        ) : (
+          <Text>...</Text>
+        )}
       </PanelFooter>
     </Panel>
   );
