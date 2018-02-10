@@ -111,41 +111,47 @@ class GameProvider extends Component {
   update = (newState = {}, newContext = {}, nextTransition) => {
     const { context, ...restOfState } = this.state;
     this.setState({ ...restOfState, ...newState });
-    this.setContext(newContext);
+    this.setContext((context) => ({ ...context, ...newContext }));
     nextTransition && this.operate(nextTransition);
   };
 
   registerPlayer = (name, playerId, balance) => {
-    this.setState((state) => {
+    this.setContext((context) => {
       console.log(`${name} enters the game`);
-      const players = [...state.context.players, { name, playerId, balance }];
-      return { ...state, context: { ...state.context, players } };
+      const players = [...context.players, { name, playerId, balance }];
+      return { ...context, players };
     });
   };
 
   placeBet = (playerId, amount, betOnPass) => {
-    this.setState((state) => {
-      const player = state.context.players.find((player) => player.playerId === playerId);
+    this.setContext((context) => {
+      const player = context.players.find((player) => player.playerId === playerId);
       if (this.fsm.state !== STATE_PLACING_BETS) {
-        console.log(`${player.name} missed bet :(`);
+        console.log(`${player.name} missed betting phase :(`);
       } else {
         console.log(`${player.name} places bet of ${amount} XLM`);
-        const bets = [...state.context.bets, { playerId, amount, betOnPass }];
-        return { ...state, context: { ...state.context, bets } };
+        const bets = [...context.bets, { playerId, amount, betOnPass }];
+        return { ...context, bets };
       }
     });
   };
 
-  setContext(newContext) {
+  setContext(getNewContext = (c) => c) {
     this.setState((state) => ({
       ...state,
       context: {
         ...state.context,
-        ...newContext,
+        ...getNewContext(state.context),
+
+        // game state
         isRoundActive: this.fsm.state !== STATE_IDLE,
         roundStatus: this.fsm.state,
+
+        // player actions
         registerPlayer: this.registerPlayer,
         placeBet: this.placeBet,
+
+        // game driver (user) actions
         placeBets: () => this.fsm.placeBets(),
         stop: () => this.setState({ shouldStop: true }),
       },
