@@ -1,6 +1,5 @@
 import React from 'react';
 import { all as names } from 'dog-names';
-import Bot from 'lib/Bot/Bot';
 import { Panel, PanelHeader, PanelFooter, BackgroundImage, Subhead, Code, Text, NavLink } from 'rebass';
 
 // @see http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
@@ -22,7 +21,6 @@ const Player = ({ account, bets, lastWin }) => {
   const derefereredUrl = `http://www.dereferer.org/?${encodeURIComponent(actualUrl)}`;
   return (
     <Panel width="100%">
-      <Bot account={account} />
       <PanelHeader>
         <NavLink href={derefereredUrl}>
           <Code style={{ whiteSpace: 'pre', fontSize: 10 }}>{account.account_id.match(/.{1,28}/g).join('\n')}</Code>

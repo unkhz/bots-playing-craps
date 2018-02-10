@@ -4,12 +4,14 @@ import { Provider as ThemeProvider, Relative, Banner, Heading, Flex, Box, Button
 import ServerProvider from 'lib/ServerProvider/ServerProvider';
 import GameProvider, { GameContext } from 'lib/GameProvider/GameProvider';
 import Player from 'lib/Player/Player';
+import Bots from 'lib/Bots/Bots';
 
 const App = (props) => {
   return (
     <ThemeProvider>
       <ServerProvider>
         <GameProvider>
+          <Bots />
           <Relative style={{ textAlign: 'center' }}>
             <Banner
               style={{ minHeight: '20vh' }}

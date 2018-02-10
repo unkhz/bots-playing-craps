@@ -77,7 +77,7 @@ class GameProvider extends Component {
   }
 
   componentWillReceiveProps(props) {
-    this.update({}, { participants: props.accounts });
+    this.update({}, { participants: props.serverContext ? props.serverContext.accounts : [] });
   }
 
   operate(action, min = 100, max = 1000) {
@@ -88,7 +88,7 @@ class GameProvider extends Component {
   handlePlaceBets = async () => {
     this.update();
     await Promise.all(
-      this.props.accounts.map(async (account) => {
+      this.state.participants.map(async (account) => {
         await delay(randomInteger(1000, 5000));
         const newState = update(this.state, {
           bets: { $push: [makeABet(account)] },
@@ -146,11 +146,12 @@ class GameProvider extends Component {
   };
 
   render() {
-    console.log('Rendering', this.state, this.props.accounts);
     return <GameContext.Provider value={this.state.context}>{this.props.children}</GameContext.Provider>;
   }
 }
 
 export default (props) => (
-  <ServerContext.Consumer>{({ accounts }) => <GameProvider accounts={accounts} {...props} />}</ServerContext.Consumer>
+  <ServerContext.Consumer>
+    {(serverContext) => <GameProvider serverContext={serverContext} {...props} />}
+  </ServerContext.Consumer>
 );
