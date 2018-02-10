@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { all as names } from 'dog-names';
 
 import { ServerContext } from 'lib/ServerProvider/ServerProvider';
-import { GameContext } from 'lib/GameProvider/GameProvider';
+import { GameContext, STATE_IDLE, STATE_PLACING_BETS } from 'lib/GameProvider/GameProvider';
 
 // @see http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
 const hashCode = (str) => {
@@ -16,12 +16,33 @@ const hashCode = (str) => {
   return hash;
 };
 
+const randomInteger = (min, max) => min + Math.round(Math.random() * (max - min));
+const think = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 class Bot extends Component {
   componentDidMount() {
     const { account: { account_id, balance } } = this.props;
     const { registerPlayer } = this.props.gameContext;
-    const name = names[Math.abs(hashCode(account_id)) % names.length];
-    registerPlayer(name, account_id, balance);
+    registerPlayer(this.getName(), account_id, balance);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { gameContext: oldGameContext } = this.props;
+    const { gameContext } = nextProps;
+    if (oldGameContext.roundStatus === STATE_IDLE && gameContext.roundStatus === STATE_PLACING_BETS) {
+      this.thinkAndPlaceBet();
+    }
+  }
+
+  async thinkAndPlaceBet() {
+    await think(randomInteger(1000, 5000));
+    const { gameContext, account } = this.props;
+    gameContext.placeBet(account.account_id, randomInteger(0, account.balance / 2), randomInteger(0, 100) > 50);
+  }
+
+  getName() {
+    const { account: { account_id } } = this.props;
+    return names[Math.abs(hashCode(account_id)) % names.length];
   }
 
   render() {

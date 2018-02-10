@@ -1,27 +1,18 @@
 import React, { Component } from 'react';
 import createContext from 'create-react-context';
-import update from 'immutability-helper';
 import StateMachine from 'javascript-state-machine';
 
 import { ServerContext } from 'lib/ServerProvider/ServerProvider';
 
 const sum = (dice) => dice.reduce((r, v) => r + v, 0);
 const randomInteger = (min, max) => min + Math.round(Math.random() * (max - min));
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const think = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const makeABet = ({ playerId, balance }) => {
-  return {
-    playerId,
-    amount: randomInteger(0, balance),
-    betOnPass: randomInteger(0, 100) > 50,
-  };
-};
-
-const STATE_PLACING_BETS = 'placing_bets';
-const STATE_IDLE = 'idle';
-const STATE_ROLLING = 'rolling_dice';
-const STATE_REROLLING = 'rerolling';
-const STATE_COLLECTING_WINS = 'collecting_wins';
+export const STATE_PLACING_BETS = 'placing_bets';
+export const STATE_IDLE = 'idle';
+export const STATE_ROLLING = 'rolling_dice';
+export const STATE_REROLLING = 'rerolling';
+export const STATE_COLLECTING_WINS = 'collecting_wins';
 
 export const GameContext = createContext({});
 
@@ -32,7 +23,6 @@ class GameProvider extends Component {
       bets: [],
       players: [],
     },
-    bets: [],
   };
 
   componentDidMount() {
@@ -80,15 +70,7 @@ class GameProvider extends Component {
 
   handlePlaceBets = async () => {
     this.update();
-    await Promise.all(
-      this.state.context.players.map(async (player) => {
-        await delay(randomInteger(1000, 5000));
-        const newState = update(this.state, {
-          bets: { $push: [makeABet(player)] },
-        });
-        this.update(newState, { bets: newState.bets });
-      })
-    );
+    await think(4000);
     this.operate(this.fsm.roll);
   };
 
@@ -115,14 +97,15 @@ class GameProvider extends Component {
 
   handleCollectWins = async () => {
     const nextTransition = this.fsm.stop;
-    const pot = this.state.bets.reduce((r, { amount }) => r + amount, 0);
-    const winnersWithBets = this.state.bets.filter((bet) => !(bet.betOnPass ^ this.state.isPass));
+    const { bets } = this.state.context;
+    const pot = bets.reduce((r, { amount }) => r + amount, 0);
+    const winnersWithBets = bets.filter((bet) => !(bet.betOnPass ^ this.state.isPass));
     const totalWinningBets = winnersWithBets.reduce((r, { amount }) => r + amount, 0);
     const winners = winnersWithBets.map(({ playerId, amount }) => ({
       playerId,
       win: amount / totalWinningBets * pot,
     }));
-    this.update({ bets: [] }, { bets: [], dice: [], winners }, nextTransition);
+    this.update({}, { bets: [], dice: [], winners }, nextTransition);
   };
 
   update = (newState = {}, newContext = {}, nextTransition) => {
@@ -140,6 +123,19 @@ class GameProvider extends Component {
     });
   };
 
+  placeBet = (playerId, amount, betOnPass) => {
+    this.setState((state) => {
+      const player = state.context.players.find((player) => player.playerId === playerId);
+      if (this.fsm.state !== STATE_PLACING_BETS) {
+        console.log(`${player.name} missed bet :(`);
+      } else {
+        console.log(`${player.name} places bet of ${amount} XLM`);
+        const bets = [...state.context.bets, { playerId, amount, betOnPass }];
+        return { ...state, context: { ...state.context, bets } };
+      }
+    });
+  };
+
   setContext(newContext) {
     this.setState((state) => ({
       ...state,
@@ -149,6 +145,7 @@ class GameProvider extends Component {
         isRoundActive: this.fsm.state !== STATE_IDLE,
         roundStatus: this.fsm.state,
         registerPlayer: this.registerPlayer,
+        placeBet: this.placeBet,
         placeBets: () => this.fsm.placeBets(),
         stop: () => this.setState({ shouldStop: true }),
       },
