@@ -115,6 +115,13 @@ class GameProvider extends Component {
     nextTransition && this.operate(nextTransition);
   };
 
+  registerDealer = (name, accountId, balance) => {
+    this.setContext((context) => {
+      console.log(`${name} enters as the dealer`);
+      return { ...context, dealer: { name, accountId, balance } };
+    });
+  };
+
   registerPlayer = (name, playerId, balance) => {
     this.setContext((context) => {
       console.log(`${name} enters the game`);
@@ -142,16 +149,14 @@ class GameProvider extends Component {
       context: {
         ...state.context,
         ...getNewContext(state.context),
-
         // game state
         isRoundActive: this.fsm.state !== STATE_IDLE,
         roundStatus: this.fsm.state,
-
         // player actions
         registerPlayer: this.registerPlayer,
         placeBet: this.placeBet,
-
-        // game driver (user) actions
+        // dealer actions
+        registerDealer: this.registerDealer,
         placeBets: () => this.fsm.placeBets(),
         stop: () => this.setState({ shouldStop: true }),
       },

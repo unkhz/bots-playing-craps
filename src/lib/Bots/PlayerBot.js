@@ -19,7 +19,7 @@ const hashCode = (str) => {
 const randomInteger = (min, max) => min + Math.round(Math.random() * (max - min));
 const think = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-class Bot extends Component {
+class PlayerBot extends Component {
   componentDidMount() {
     const { account: { account_id, balance } } = this.props;
     const { registerPlayer } = this.props.gameContext;
@@ -56,7 +56,7 @@ export default (props) => (
       <GameContext.Consumer>
         {(gameContext) =>
           serverContext && gameContext ? (
-            <Bot serverContext={serverContext} gameContext={gameContext} {...props} />
+            <PlayerBot serverContext={serverContext} gameContext={gameContext} {...props} />
           ) : null
         }
       </GameContext.Consumer>
