@@ -1,36 +1,22 @@
 import React from 'react';
-import { all as names } from 'dog-names';
 import { Panel, PanelHeader, PanelFooter, BackgroundImage, Subhead, Code, Text, NavLink } from 'rebass';
 
-// @see http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
-const hashCode = (str) => {
-  var hash = 0;
-  if (str.length === 0) return hash;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return hash;
-};
-
-const Player = ({ account, bets, lastWin }) => {
-  const name = names[Math.abs(hashCode(account.account_id)) % names.length];
-  const bet = bets.find(({ account_id }) => account_id === account.account_id);
-  const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${account.account_id}`;
+const Player = ({ player, bets, lastWin }) => {
+  const bet = bets.find(({ playerId }) => playerId === player.playerId);
+  const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${player.playerId}`;
   const derefereredUrl = `http://www.dereferer.org/?${encodeURIComponent(actualUrl)}`;
   return (
     <Panel width="100%">
       <PanelHeader>
         <NavLink href={derefereredUrl}>
-          <Code style={{ whiteSpace: 'pre', fontSize: 10 }}>{account.account_id.match(/.{1,28}/g).join('\n')}</Code>
+          <Code style={{ whiteSpace: 'pre', fontSize: 10 }}>{player.playerId.match(/.{1,28}/g).join('\n')}</Code>
         </NavLink>
       </PanelHeader>
-      <BackgroundImage ratio={2 / 3} src={`https://robohash.org/${account.account_id}.png`} style={{ height: '5vh' }} />
+      <BackgroundImage ratio={2 / 3} src={`https://robohash.org/${player.playerId}.png`} style={{ height: '5vh' }} />
 
-      <Subhead m={1}>{name}</Subhead>
+      <Subhead m={1}>{player.name}</Subhead>
       <Text fontSize={14} m={1}>
-        {Number(account.balance)} XLM
+        {Number(player.balance)} XLM
       </Text>
       <PanelFooter>
         {bet ? (

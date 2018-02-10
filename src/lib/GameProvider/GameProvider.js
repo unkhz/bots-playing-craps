@@ -9,9 +9,9 @@ const sum = (dice) => dice.reduce((r, v) => r + v, 0);
 const randomInteger = (min, max) => min + Math.round(Math.random() * (max - min));
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const makeABet = ({ account_id, balance }) => {
+const makeABet = ({ playerId, balance }) => {
   return {
-    account_id,
+    playerId,
     amount: randomInteger(0, balance),
     betOnPass: randomInteger(0, 100) > 50,
   };
@@ -30,10 +30,7 @@ class GameProvider extends Component {
   state = {
     context: {
       bets: [],
-      winners: [],
-      participants: [],
-      placeBets: () => this.fsm.placeBets(),
-      stop: () => this.setState({ shouldStop: true }),
+      players: [],
     },
     bets: [],
   };
@@ -76,10 +73,6 @@ class GameProvider extends Component {
     this.update();
   }
 
-  componentWillReceiveProps(props) {
-    this.update({}, { participants: props.serverContext ? props.serverContext.accounts : [] });
-  }
-
   operate(action, min = 100, max = 1000) {
     clearTimeout(this.operationTimeoutId);
     this.operationTimeoutId = setTimeout(action.bind(this.fsm), randomInteger(min, max));
@@ -88,10 +81,10 @@ class GameProvider extends Component {
   handlePlaceBets = async () => {
     this.update();
     await Promise.all(
-      this.state.participants.map(async (account) => {
+      this.state.context.players.map(async (player) => {
         await delay(randomInteger(1000, 5000));
         const newState = update(this.state, {
-          bets: { $push: [makeABet(account)] },
+          bets: { $push: [makeABet(player)] },
         });
         this.update(newState, { bets: newState.bets });
       })
@@ -125,25 +118,42 @@ class GameProvider extends Component {
     const pot = this.state.bets.reduce((r, { amount }) => r + amount, 0);
     const winnersWithBets = this.state.bets.filter((bet) => !(bet.betOnPass ^ this.state.isPass));
     const totalWinningBets = winnersWithBets.reduce((r, { amount }) => r + amount, 0);
-    const winners = winnersWithBets.map(({ account_id, amount }) => ({
-      account_id,
+    const winners = winnersWithBets.map(({ playerId, amount }) => ({
+      playerId,
       win: amount / totalWinningBets * pot,
     }));
     this.update({ bets: [] }, { bets: [], dice: [], winners }, nextTransition);
   };
 
   update = (newState = {}, newContext = {}, nextTransition) => {
-    this.setState({
-      ...newState,
+    const { context, ...restOfState } = this.state;
+    this.setState({ ...restOfState, ...newState });
+    this.setContext(newContext);
+    nextTransition && this.operate(nextTransition);
+  };
+
+  registerPlayer = (name, playerId, balance) => {
+    this.setState((state) => {
+      console.log(`${name} enters the game`);
+      const players = [...state.context.players, { name, playerId, balance }];
+      return { ...state, context: { ...state.context, players } };
+    });
+  };
+
+  setContext(newContext) {
+    this.setState((state) => ({
+      ...state,
       context: {
-        ...this.state.context,
+        ...state.context,
         ...newContext,
         isRoundActive: this.fsm.state !== STATE_IDLE,
         roundStatus: this.fsm.state,
+        registerPlayer: this.registerPlayer,
+        placeBets: () => this.fsm.placeBets(),
+        stop: () => this.setState({ shouldStop: true }),
       },
-    });
-    nextTransition && this.operate(nextTransition);
-  };
+    }));
+  }
 
   render() {
     return <GameContext.Provider value={this.state.context}>{this.props.children}</GameContext.Provider>;
