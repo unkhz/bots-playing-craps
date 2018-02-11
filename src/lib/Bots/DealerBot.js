@@ -20,7 +20,7 @@ class DealerBot extends Component {
   componentDidMount() {
     const { account: { account_id, balance } } = this.props;
     const { registerDealer } = this.props.gameContext;
-    registerDealer(this.getName(), account_id, balance);
+    registerDealer(this.getName(), account_id, this.getGameBalance(balance));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -30,8 +30,12 @@ class DealerBot extends Component {
       this.payWinners();
     }
     if (oldAccount.balance !== balance) {
-      gameContext.updateDealer(accountId, { balance });
+      gameContext.updateDealer(accountId, { balance: this.getGameBalance(balance) });
     }
+  }
+
+  getGameBalance(balance) {
+    return balance - 10000;
   }
 
   async payWinners() {
