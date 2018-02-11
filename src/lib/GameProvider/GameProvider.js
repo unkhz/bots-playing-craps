@@ -77,7 +77,7 @@ class GameProvider extends Component {
         },
         onStop: () => {
           console.log('Round ended');
-          this.update();
+          this.update({}, { bets: [], dice: [], winners: [] });
         },
       },
     });
@@ -146,8 +146,8 @@ class GameProvider extends Component {
   };
 
   handleDecideWins = async () => {
-    const { bets } = this.state.context;
-    const pot = bets.reduce((r, { amount }) => r + amount, 0);
+    const { bets, dealer } = this.state.context;
+    const pot = dealer.balance;
     const winnersWithBets = bets.filter((bet) => !(bet.betOnPass ^ this.state.isPass));
     const totalWinningBets = winnersWithBets.reduce((r, { amount }) => r + amount, 0);
     const winners = winnersWithBets.map(({ accountId, amount, name }) => ({
@@ -189,7 +189,7 @@ class GameProvider extends Component {
     });
     closeEventSource();
     const nextTransition = this.fsm.stop;
-    this.update({}, { bets: [], dice: [], winners: [] }, nextTransition);
+    this.update({}, {}, nextTransition);
   };
 
   update = (newState = {}, newContext = {}, nextTransition) => {

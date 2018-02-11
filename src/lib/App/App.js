@@ -5,6 +5,7 @@ import ServerProvider from 'lib/ServerProvider/ServerProvider';
 import GameProvider, { GameContext } from 'lib/GameProvider/GameProvider';
 import withDefinedContext from 'lib/withDefinedContext/withDefinedContext';
 
+import RoundInfo from 'lib/RoundInfo/RoundInfo';
 import Player from 'lib/Player/Player';
 import Dealer from 'lib/Player/Dealer';
 import Bots from 'lib/Bots/Bots';
@@ -55,13 +56,7 @@ const App = (props) => {
                     </Flex>
 
                     <Absolute style={{ bottom: 0, left: 0, right: 0, height: 200 }}>
-                      <Heading>{roundStatus}</Heading>
-                      <Text fontSize={14} m={10}>
-                        Pot: {bets ? bets.reduce((sum, { amount }) => sum + amount, 0) : 0} XLM
-                      </Text>
-                      <Text fontSize={14} m={10}>
-                        Dice: {dice && dice.join(' ')}
-                      </Text>
+                      <RoundInfo roundStatus={roundStatus} dice={dice} dealer={dealer} bets={bets} winners={winners} />
                       <Button style={{ cursor: 'pointer' }} m={10} disabled={isRoundActive} onClick={placeBets}>
                         <Text fontSize={36} m={10} style={{ textTransform: 'uppercase' }}>
                           PLAY
