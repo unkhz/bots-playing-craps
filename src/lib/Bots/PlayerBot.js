@@ -40,7 +40,7 @@ class PlayerBot extends Component {
   async thinkAndPlaceBet() {
     await think(randomInteger(500, 2100));
     const { gameContext, serverContext, account, identity, dealerAccountId } = this.props;
-    const amount = randomInteger(0, Math.floor(account.balance / 2));
+    const amount = randomInteger(0, Math.floor(account.balance / 3));
     if (!amount) return;
     const expectedTransactionMemo = gameContext.placeBet(account.accountId, amount, randomInteger(0, 100) > 50);
     if (expectedTransactionMemo) {
