@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import createContext from 'create-react-context';
 import invariant from 'invariant';
+import store from 'store';
 
 const mapServerStateToAccount = (response) => ({
   ...response,
@@ -109,12 +110,16 @@ class ServerProvider extends Component {
 
   scanTransactions = (accountId, filter) => {
     const { server } = this.state;
+    const lastCursor = store.get('lastScanTransactionsCursor') || 0;
     return server
       .transactions()
       .forAccount(accountId)
-      .cursor(0)
+      .cursor(lastCursor)
       .stream({
-        onmessage: (tx) => filter(tx),
+        onmessage: (tx) => {
+          store.set('lastScanTransactionsCursor', tx.paging_token);
+          return filter(tx);
+        },
       });
   };
 
