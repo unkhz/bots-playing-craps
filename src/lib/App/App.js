@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { Provider as ThemeProvider, Relative, Absolute, Banner, Heading, Flex, Box, Button, Text } from 'rebass';
+import { Provider as ThemeProvider, Relative, Absolute, Banner, Heading, Flex, Button, Text } from 'rebass';
 import ServerProvider from 'lib/ServerProvider/ServerProvider';
 import GameProvider, { GameContext } from 'lib/GameProvider/GameProvider';
 import withDefinedContext from 'lib/withDefinedContext/withDefinedContext';
@@ -20,39 +20,30 @@ const App = (props) => {
           <Bots />
           <Relative style={{ textAlign: 'center' }}>
             <Banner
-              style={{ boxSizing: 'border-box', minHeight: '20vh' }}
+              style={{ boxSizing: 'border-box', minHeight: '18vh' }}
               color="white"
               bg="gray8"
               backgroundImage="https://images.unsplash.com/photo-1515606378517-3451a4fa2e12?fit=crop&w=1800&q=80"
             >
               <Heading>Bots playing craps</Heading>
             </Banner>
-            <Relative style={{ boxSizing: 'border-box', minHeight: '80vh', paddingBottom: 200 }}>
+            <Relative style={{ boxSizing: 'border-box', minHeight: '82vh', paddingBottom: 200 }}>
               <WithGameContext>
                 {({ roundStatus, isRoundActive, placeBets, stop, bets, dice, players, dealer, winners }) => (
                   <Fragment>
                     <Flex wrap justify="center">
                       {players &&
-                        players.sort((a, b) => (a.accountId > b.accountId ? 1 : -1)).map((player) => (
-                          <Box
-                            key={player.accountId}
-                            w={1 / 4}
-                            m={3}
-                            flex="1 1 auto"
-                            style={{ minWidth: 50, maxWidth: 150 }}
-                          >
+                        players
+                          .sort((a, b) => (a.accountId > b.accountId ? 1 : -1))
+                          .map((player) => (
                             <Player
+                              key={player.accountId}
                               player={player}
                               bets={bets}
                               lastWin={winners && winners.find(({ accountId }) => accountId === player.accountId)}
                             />
-                          </Box>
-                        ))}
-                      {dealer && (
-                        <Box w={1 / 4} m={3} flex="1 1 auto" style={{ minWidth: 50, maxWidth: 150 }}>
-                          <Dealer player={dealer} />
-                        </Box>
-                      )}
+                          ))}
+                      {dealer && <Dealer player={dealer} />}
                     </Flex>
 
                     <Absolute style={{ bottom: 0, left: 0, right: 0, height: 200 }}>

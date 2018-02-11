@@ -49,7 +49,7 @@ export default function(props) {
   const textFactory = texts[props.roundStatus];
   return (
     <X>
-      <Text fontSize={14} m={10} style={{ lineHeight: '36px' }}>
+      <Text fontSize={14} m={10} style={{ minHeight: '48px' }}>
         {textFactory && textFactory(props)}
       </Text>
     </X>

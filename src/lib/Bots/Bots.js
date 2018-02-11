@@ -7,7 +7,7 @@ import DealerBot from './DealerBot';
 
 const STORE_KEY_PLAYER_BOTS = 'players';
 const STORE_KEY_DEALER_BOT = 'dealer';
-const PLAYER_BOT_COUNT = 3;
+const PLAYER_BOT_COUNT = 7;
 
 class Bots extends Component {
   state = {};
