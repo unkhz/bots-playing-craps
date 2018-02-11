@@ -42,16 +42,20 @@ class Bots extends Component {
   render() {
     const { accounts = [] } = this.props;
     const { dealerIdentity, playerIdentities = [] } = this.state;
-    const dealerAccount = accounts.find(({ account_id }) => account_id === dealerIdentity.publicKey);
-    const playerAccounts = playerIdentities.map(({ publicKey }) =>
-      accounts.find(({ account_id }) => account_id === publicKey)
-    );
-    if (!dealerAccount) return null;
+    const dealerAccount = accounts.find(({ accountId }) => accountId === dealerIdentity.publicKey);
+    const playerAccounts = playerIdentities
+      .map((identity) => [identity, accounts.find(({ accountId }) => accountId === identity.publicKey)])
+      .filter(([identity, account]) => account);
     return (
       <Fragment>
-        <DealerBot account={dealerAccount} />
-        {playerAccounts.map((account) => (
-          <PlayerBot key={account.account_id} account={account} dealerAccount={dealerAccount} />
+        {dealerAccount && <DealerBot account={dealerAccount} identity={dealerIdentity} />}
+        {playerAccounts.map(([identity, account]) => (
+          <PlayerBot
+            key={identity.publicKey}
+            identity={identity}
+            account={account}
+            dealerAccountId={dealerIdentity.publicKey}
+          />
         ))}
       </Fragment>
     );

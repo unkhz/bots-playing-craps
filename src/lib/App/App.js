@@ -6,6 +6,7 @@ import GameProvider, { GameContext } from 'lib/GameProvider/GameProvider';
 import withDefinedContext from 'lib/withDefinedContext/withDefinedContext';
 
 import Player from 'lib/Player/Player';
+import Dealer from 'lib/Player/Dealer';
 import Bots from 'lib/Bots/Bots';
 
 const WithGameContext = withDefinedContext(GameContext);
@@ -27,25 +28,30 @@ const App = (props) => {
             </Banner>
             <Relative style={{ boxSizing: 'border-box', minHeight: '80vh', paddingBottom: 200 }}>
               <WithGameContext>
-                {({ roundStatus, isRoundActive, placeBets, stop, bets, dice, players, winners }) => (
+                {({ roundStatus, isRoundActive, placeBets, stop, bets, dice, players, dealer, winners }) => (
                   <Fragment>
                     <Flex wrap justify="center">
                       {players &&
-                        players.map((player) => (
+                        players.sort((a, b) => (a.accountId > b.accountId ? 1 : -1)).map((player) => (
                           <Box
-                            key={player.playerId}
+                            key={player.accountId}
                             w={1 / 4}
                             m={3}
                             flex="1 1 auto"
-                            style={{ minWidth: 200, maxWidth: 300 }}
+                            style={{ minWidth: 50, maxWidth: 150 }}
                           >
                             <Player
                               player={player}
                               bets={bets}
-                              lastWin={winners && winners.find(({ playerId }) => playerId === player.playerId)}
+                              lastWin={winners && winners.find(({ accountId }) => accountId === player.accountId)}
                             />
                           </Box>
                         ))}
+                      {dealer && (
+                        <Box w={1 / 4} m={3} flex="1 1 auto" style={{ minWidth: 50, maxWidth: 150 }}>
+                          <Dealer player={dealer} />
+                        </Box>
+                      )}
                     </Flex>
 
                     <Absolute style={{ bottom: 0, left: 0, right: 0, height: 200 }}>

@@ -21,28 +21,46 @@ const think = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 class PlayerBot extends Component {
   componentDidMount() {
-    const { account: { account_id, balance } } = this.props;
+    const { account: { accountId, balance } } = this.props;
     const { registerPlayer } = this.props.gameContext;
-    registerPlayer(this.getName(), account_id, balance);
+    registerPlayer(this.getName(), accountId, balance);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { gameContext: oldGameContext } = this.props;
-    const { gameContext } = nextProps;
+    const { gameContext: oldGameContext, account: oldAccount } = this.props;
+    const { gameContext, account: { accountId, balance } } = nextProps;
     if (oldGameContext.roundStatus === STATE_IDLE && gameContext.roundStatus === STATE_PLACING_BETS) {
       this.thinkAndPlaceBet();
+    }
+    if (oldAccount.balance !== balance) {
+      gameContext.updatePlayer(accountId, { balance });
     }
   }
 
   async thinkAndPlaceBet() {
-    await think(randomInteger(1000, 5000));
-    const { gameContext, account } = this.props;
-    gameContext.placeBet(account.account_id, randomInteger(0, account.balance / 2), randomInteger(0, 100) > 50);
+    await think(randomInteger(500, 2100));
+    const { gameContext, serverContext, account, identity, dealerAccountId } = this.props;
+    const amount = randomInteger(0, Math.floor(account.balance / 2));
+    if (!amount) return;
+    const expectedTransactionMemo = gameContext.placeBet(account.accountId, amount, randomInteger(0, 100) > 50);
+    if (expectedTransactionMemo) {
+      const transaction = serverContext.makeTransaction(
+        identity.publicKey,
+        dealerAccountId,
+        amount,
+        expectedTransactionMemo,
+        (transaction, sdk) => {
+          const keys = sdk.Keypair.fromSecret(identity.secret);
+          transaction.sign(keys);
+        }
+      );
+      transaction.catch((err) => console.log('Transaction failed', err, amount));
+    }
   }
 
   getName() {
-    const { account: { account_id } } = this.props;
-    return names[Math.abs(hashCode(account_id)) % names.length];
+    const { account: { accountId } } = this.props;
+    return names[Math.abs(hashCode(accountId)) % names.length];
   }
 
   render() {

@@ -1,8 +1,7 @@
 import React from 'react';
 import { Panel, PanelHeader, PanelFooter, BackgroundImage, Subhead, Code, Text, NavLink } from 'rebass';
 
-const Player = ({ player, bets, lastWin }) => {
-  const bet = bets.find(({ accountId }) => accountId === player.accountId);
+const Dealer = ({ player, lastWin }) => {
   const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${player.accountId}`;
   const derefereredUrl = `http://www.dereferer.org/?${encodeURIComponent(actualUrl)}`;
   return (
@@ -19,27 +18,11 @@ const Player = ({ player, bets, lastWin }) => {
         ~ {Math.round(player.balance)} XLM
       </Text>
       <PanelFooter>
-        {bet ? (
-          <Text>
-            Bet ~{' '}
-            <b>
-              {Math.round(bet.amount)} XLM, {bet.betOnPass ? 'pass' : 'not pass'}
-            </b>
-          </Text>
-        ) : (
-          <Text>...</Text>
-        )}
-
-        {lastWin ? (
-          <Text>
-            Won ~ <b>{Math.round(lastWin.win)} XLM</b>
-          </Text>
-        ) : (
-          <Text>...</Text>
-        )}
+        <Text>DEALER</Text>
+        <Text>...</Text>
       </PanelFooter>
     </Panel>
   );
 };
 
-export default Player;
+export default Dealer;
