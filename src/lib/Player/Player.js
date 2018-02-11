@@ -18,19 +18,15 @@ const Player = ({ player, bets, lastWin }) => {
       <Text fontSize={14} m={1}>
         ~ {Math.round(player.balance)} XLM
       </Text>
-      <PanelFooter>
+      <PanelFooter style={{ lineHeight: '32px' }}>
         {bet ? (
           <Text>
-            Bet ~{' '}
-            <b>
-              {Math.round(bet.amount)} XLM, {bet.betOnPass ? 'pass' : 'not pass'}
-            </b>
+            <b>{Math.round(bet.amount)}</b> XLM for{' '}
+            <span style={{ fontSize: '24px', display: 'inline' }}>
+              <span role="img">{bet.betOnPass ? '👍' : '👎'}</span>
+            </span>
           </Text>
-        ) : (
-          <Text>...</Text>
-        )}
-
-        {lastWin ? (
+        ) : lastWin ? (
           <Text>
             Won ~ <b>{Math.round(lastWin.win)} XLM</b>
           </Text>
@@ -41,5 +37,4 @@ const Player = ({ player, bets, lastWin }) => {
     </Panel>
   );
 };
-
 export default Player;

@@ -17,9 +17,8 @@ const Dealer = ({ player, lastWin }) => {
       <Text fontSize={14} m={1}>
         ~ {Math.round(player.balance)} XLM
       </Text>
-      <PanelFooter>
+      <PanelFooter style={{ lineHeight: '32px' }}>
         <Text>DEALER</Text>
-        <Text>...</Text>
       </PanelFooter>
     </Panel>
   );
