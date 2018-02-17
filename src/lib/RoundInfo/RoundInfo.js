@@ -46,11 +46,11 @@ const texts = {
 };
 
 export default function(props) {
-  const textFactory = texts[props.roundStatus];
+  const textFactory = texts[props.roundStatus] || texts[STATE_IDLE];
   return (
     <X>
       <Text fontSize={14} m={10} style={{ minHeight: '48px' }}>
-        {textFactory && textFactory(props)}
+        {props.isWaitingForBots ? 'Conjuring bots...' : textFactory(props)}
       </Text>
     </X>
   );

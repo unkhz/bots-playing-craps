@@ -30,7 +30,7 @@ const App = (props) => {
               <Heading>Bots playing craps</Heading>
             </Banner>
             <Relative style={{ boxSizing: 'border-box', minHeight: '82vh', paddingBottom: 200 }}>
-              <WithGameContext>
+              <WithGameContext waitNode={<Text>Creating game...</Text>}>
                 {({ roundStatus, isRoundActive, placeBets, stop, bets, dice, players, dealer, winners }) => (
                   <Fragment>
                     <Flex wrap justify="center">
@@ -49,8 +49,20 @@ const App = (props) => {
                     </Flex>
 
                     <Absolute style={{ bottom: 0, left: 0, right: 0, height: 200 }}>
-                      <RoundInfo roundStatus={roundStatus} dice={dice} dealer={dealer} bets={bets} winners={winners} />
-                      <Button style={{ cursor: 'pointer' }} m={10} disabled={isRoundActive} onClick={placeBets}>
+                      <RoundInfo
+                        isWaitingForBots={!dealer || players.length < PLAYER_BOT_COUNT}
+                        roundStatus={roundStatus}
+                        dice={dice}
+                        dealer={dealer}
+                        bets={bets}
+                        winners={winners}
+                      />
+                      <Button
+                        style={{ cursor: 'pointer' }}
+                        m={10}
+                        disabled={isRoundActive || !dealer || players.length < PLAYER_BOT_COUNT}
+                        onClick={placeBets}
+                      >
                         <Text fontSize={36} m={10} style={{ textTransform: 'uppercase' }}>
                           PLAY
                         </Text>
