@@ -17,30 +17,36 @@ class Bots extends Component {
 
   async loadBots() {
     const { loadAccounts } = this.props;
+    const dealerIdentity = store.get(STORE_KEY_DEALER_BOT) || (await this.createAndStoreNewDealerAccount());
     const playerIdentities =
       store.get(STORE_KEY_PLAYER_BOTS) || (await this.createAndStoreNewPlayerAccounts(this.props.playerCount));
-    const dealerIdentity = store.get(STORE_KEY_DEALER_BOT) || (await this.createAndStoreNewDealerAccount());
     this.setState({ playerIdentities, dealerIdentity });
     loadAccounts([dealerIdentity.publicKey].concat(playerIdentities.map(({ publicKey }) => publicKey)));
   }
 
   async createAndStoreNewPlayerAccounts(count) {
-    const { createNewAccount } = this.props;
+    const { createNewAccount, loadAndUpdateAccount } = this.props;
     let playerIdentities = [];
     while (playerIdentities.length < this.props.playerCount) {
       const id = await createNewAccount();
-      if (id) playerIdentities.push(id);
+      if (id) {
+        playerIdentities.push(id);
+        this.setState({ playerIdentities });
+        loadAndUpdateAccount(id.publicKey);
+      }
     }
     store.set(STORE_KEY_PLAYER_BOTS, playerIdentities);
     return playerIdentities;
   }
 
   async createAndStoreNewDealerAccount(count) {
-    const { createNewAccount } = this.props;
+    const { createNewAccount, loadAndUpdateAccount } = this.props;
     let dealerIdentity;
     while (!dealerIdentity) {
       dealerIdentity = await createNewAccount();
     }
+    loadAndUpdateAccount(dealerIdentity.publicKey);
+    this.setState({ dealerIdentity });
     store.set(STORE_KEY_DEALER_BOT, dealerIdentity);
     return dealerIdentity;
   }
@@ -48,7 +54,7 @@ class Bots extends Component {
   render() {
     const { accounts = [] } = this.props;
     const { dealerIdentity, playerIdentities = [] } = this.state;
-    const dealerAccount = accounts.find(({ accountId }) => accountId === dealerIdentity.publicKey);
+    const dealerAccount = dealerIdentity && accounts.find(({ accountId }) => accountId === dealerIdentity.publicKey);
     const playerAccounts = playerIdentities
       .map((identity) => [identity, accounts.find(({ accountId }) => accountId === identity.publicKey)])
       .filter(([identity, account]) => account);

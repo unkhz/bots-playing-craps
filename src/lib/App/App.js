@@ -50,10 +50,11 @@ const App = (props) => {
 
                     <Absolute style={{ bottom: 0, left: 0, right: 0, height: 200 }}>
                       <RoundInfo
-                        isWaitingForBots={!dealer || players.length < PLAYER_BOT_COUNT}
                         roundStatus={roundStatus}
+                        playerCount={PLAYER_BOT_COUNT}
                         dice={dice}
                         dealer={dealer}
+                        players={players}
                         bets={bets}
                         winners={winners}
                       />

@@ -129,6 +129,7 @@ class ServerProvider extends Component {
     ...context,
     ...newContext,
     loadAccounts: this.loadAccounts,
+    loadAndUpdateAccount: this.loadAndUpdateAccount,
     createNewAccount: this.createNewAccount,
     makeTransaction: this.makeTransaction,
     scanTransactions: this.scanTransactions,

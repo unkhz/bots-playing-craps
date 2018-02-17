@@ -46,11 +46,16 @@ const texts = {
 };
 
 export default function(props) {
-  const textFactory = texts[props.roundStatus] || texts[STATE_IDLE];
+  const { roundStatus, players, dealer, playerCount } = props;
+  const textFactory = texts[roundStatus] || texts[STATE_IDLE];
+  const botCount = (dealer ? 1 : 0) + players.length;
+  const waitCount = playerCount + 1 - botCount;
   return (
     <X>
       <Text fontSize={14} m={10} style={{ minHeight: '48px' }}>
-        {props.isWaitingForBots ? 'Conjuring bots...' : textFactory(props)}
+        {waitCount > 0
+          ? `Conjuring ${waitCount <= playerCount ? `${waitCount} more` : 'some'} bot${waitCount > 1 ? 's' : ''}...`
+          : textFactory(props)}
       </Text>
     </X>
   );
