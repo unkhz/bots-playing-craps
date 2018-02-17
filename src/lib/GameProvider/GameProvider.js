@@ -165,6 +165,10 @@ class GameProvider extends Component {
 
   handleCollectWins = async () => {
     const { dealer, winners } = this.state.context;
+    if (winners.length === 0) {
+      this.update({}, {}, this.fsm.stop);
+      return;
+    }
     const { serverContext: { scanTransactions, verifyTransaction } } = this.props;
     this.update();
     const verifiedMemos = [];
