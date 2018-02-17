@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'rebass';
+import { Text, Badge } from 'rebass';
 
 import Participant from './Participant';
 
@@ -8,14 +8,23 @@ const Player = (props) => {
   const bet = bets.find(({ accountId }) => accountId === player.accountId);
   return (
     <Participant
+      panelBackgroundColor="rgb(250,255,255)"
       {...props}
       footer={
         bet ? (
           <Text>
-            <b>{Math.round(bet.amount)}</b> XLM for{' '}
-            <span style={{ fontSize: '24px', display: 'inline' }}>
-              <span role="img">{bet.betOnPass ? '👍' : '👎'}</span>
-            </span>
+            <b>{Math.round(bet.amount)}</b> on{' '}
+            <Badge
+              color={bet.betOnPass ? 'black' : 'white'}
+              bg={bet.betOnPass ? 'white' : 'black'}
+              style={{
+                border: '1px solid black',
+                textTransform: 'uppercase',
+                fontSize: '8px',
+              }}
+            >
+              {bet.betOnPass ? 'pass' : 'fail'}
+            </Badge>
           </Text>
         ) : lastWin ? (
           <Text>

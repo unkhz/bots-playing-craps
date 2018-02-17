@@ -16,7 +16,7 @@ const WithGameContext = withDefinedContext(GameContext);
 
 const App = (props) => {
   return (
-    <ThemeProvider>
+    <ThemeProvider theme={{ font: 'Athiti, sans-serif' }}>
       <ServerProvider>
         <GameProvider>
           <Bots playerCount={PLAYER_BOT_COUNT} />

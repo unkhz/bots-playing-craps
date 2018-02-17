@@ -43,12 +43,12 @@ class ChangeObserver extends Component {
   }
 }
 
-const Participant = ({ player, bets, lastWin, footer }) => {
+const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'black' }) => {
   const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${player.accountId}`;
   const derefereredUrl = `http://www.dereferer.org/?${encodeURIComponent(actualUrl)}`;
   return (
     <Box w={1 / 4} m={2} flex="1 1 auto" style={{ minWidth: 50, maxWidth: 150 }}>
-      <Panel width="100%">
+      <Panel width="100%" style={{ backgroundColor: panelBackgroundColor }}>
         <PanelHeader p={0}>
           <NavLink p={1} href={derefereredUrl}>
             <Code style={{ whiteSpace: 'pre', fontSize: 6 }}>{player.accountId.match(/.{1,14}/g).join('\n')}</Code>
@@ -56,7 +56,15 @@ const Participant = ({ player, bets, lastWin, footer }) => {
         </PanelHeader>
         <Relative>
           <Absolute style={{ width: '100%' }}>
-            <Subhead m={1} style={{ textShadow: '0 0 10px #ffffff, 0 0 6px #ffffff, 0 0 3px #ffffff' }}>
+            <Subhead
+              m={2}
+              fontSize={32}
+              style={{
+                fontFamily: "'Indie Flower', cursive",
+                textTransform: 'uppercase',
+                textShadow: `0 0 1px ${panelBackgroundColor}, 0 0 10px ${panelBackgroundColor}, 0 0 6px ${panelBackgroundColor}, 0 0 3px ${panelBackgroundColor}`,
+              }}
+            >
               {player.name}
             </Subhead>
           </Absolute>
