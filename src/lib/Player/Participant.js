@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import ease from 'eases/bounce-out';
 import {
   Absolute,
   Relative,
@@ -12,6 +13,35 @@ import {
   Text,
   NavLink,
 } from 'rebass';
+
+const COLOR_LIFETIME = 2000;
+
+class ChangeObserver extends Component {
+  state = {};
+  componentWillReceiveProps(nextProps) {
+    const lifeTime = this.props.lifeTime;
+    const prevValue = this.props.observable;
+    const nextValue = nextProps.observable;
+    if (prevValue !== nextValue) {
+      const changeTime = new Date().getTime();
+      this.setState({ prevValue, nextValue, changeTime });
+      const handle = () => {
+        const age = new Date().getTime() - changeTime;
+        this.setState({ age });
+        if (age < lifeTime) this.frameId = requestAnimationFrame(handle);
+      };
+      this.frameId = requestAnimationFrame(handle);
+    }
+  }
+  render() {
+    return this.props.children(
+      Object.is(this.state.prevValue, this.state.nextValue),
+      this.state.prevValue,
+      this.state.nextValue,
+      this.props.lifeTime - this.state.age
+    );
+  }
+}
 
 const Participant = ({ player, bets, lastWin, footer }) => {
   const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${player.accountId}`;
@@ -35,9 +65,22 @@ const Participant = ({ player, bets, lastWin, footer }) => {
             src={`https://robohash.org/${player.accountId}.png`}
             style={{ height: '3vh' }}
           />
-          <Text fontSize={14} m={1}>
-            ~ {Math.round(player.balance)} XLM
-          </Text>
+          <ChangeObserver observable={player.balance} lifeTime={COLOR_LIFETIME}>
+            {(isChange, prevBalance, nextBalance, timeLeft) => {
+              const isPositive = nextBalance - prevBalance > 0;
+              const life = timeLeft / COLOR_LIFETIME || 0;
+              const alpha = ease(life) / 3 || 0;
+              const backgroundColor =
+                alpha >= 0
+                  ? isPositive ? `rgba(128, 255, 128, ${alpha})` : `rgba(255, 128, 128, ${alpha})`
+                  : 'transparent';
+              return (
+                <Text fontSize={14} m={1} style={{ backgroundColor, borderRadius: '4px' }}>
+                  ~ {Math.round(player.balance)} XLM
+                </Text>
+              );
+            }}
+          </ChangeObserver>
         </Relative>
         <PanelFooter style={{ minHeight: '36px' }}>{footer}</PanelFooter>
       </Panel>
