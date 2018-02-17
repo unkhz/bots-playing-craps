@@ -7,7 +7,6 @@ import DealerBot from './DealerBot';
 
 const STORE_KEY_PLAYER_BOTS = 'players';
 const STORE_KEY_DEALER_BOT = 'dealer';
-const PLAYER_BOT_COUNT = 7;
 
 class Bots extends Component {
   state = {};
@@ -19,7 +18,7 @@ class Bots extends Component {
   async loadBots() {
     const { loadAccounts } = this.props;
     const playerIdentities =
-      store.get(STORE_KEY_PLAYER_BOTS) || (await this.createAndStoreNewPlayerAccounts(PLAYER_BOT_COUNT));
+      store.get(STORE_KEY_PLAYER_BOTS) || (await this.createAndStoreNewPlayerAccounts(this.props.playerCount));
     const dealerIdentity = store.get(STORE_KEY_DEALER_BOT) || (await this.createAndStoreNewDealerAccount());
     this.setState({ playerIdentities, dealerIdentity });
     loadAccounts([dealerIdentity.publicKey].concat(playerIdentities.map(({ publicKey }) => publicKey)));
@@ -27,14 +26,21 @@ class Bots extends Component {
 
   async createAndStoreNewPlayerAccounts(count) {
     const { createNewAccount } = this.props;
-    const playerIdentities = await Promise.all(Array.from(Array(count)).map(() => createNewAccount()));
+    let playerIdentities = [];
+    while (playerIdentities.length < this.props.playerCount) {
+      const id = await createNewAccount();
+      if (id) playerIdentities.push(id);
+    }
     store.set(STORE_KEY_PLAYER_BOTS, playerIdentities);
     return playerIdentities;
   }
 
   async createAndStoreNewDealerAccount(count) {
     const { createNewAccount } = this.props;
-    const dealerIdentity = await createNewAccount();
+    let dealerIdentity;
+    while (!dealerIdentity) {
+      dealerIdentity = await createNewAccount();
+    }
     store.set(STORE_KEY_DEALER_BOT, dealerIdentity);
     return dealerIdentity;
   }
@@ -62,8 +68,8 @@ class Bots extends Component {
   }
 }
 
-export default () => (
+export default (props) => (
   <ServerContext.Consumer>
-    {(serverContext) => (serverContext ? <Bots {...serverContext} /> : null)}
+    {(serverContext) => (serverContext ? <Bots {...serverContext} {...props} /> : null)}
   </ServerContext.Consumer>
 );

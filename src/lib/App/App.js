@@ -10,6 +10,8 @@ import Player from 'lib/Player/Player';
 import Dealer from 'lib/Player/Dealer';
 import Bots from 'lib/Bots/Bots';
 
+const PLAYER_BOT_COUNT = 2;
+
 const WithGameContext = withDefinedContext(GameContext);
 
 const App = (props) => {
@@ -17,7 +19,7 @@ const App = (props) => {
     <ThemeProvider>
       <ServerProvider>
         <GameProvider>
-          <Bots />
+          <Bots playerCount={PLAYER_BOT_COUNT} />
           <Relative style={{ textAlign: 'center' }}>
             <Banner
               style={{ boxSizing: 'border-box', minHeight: '18vh' }}

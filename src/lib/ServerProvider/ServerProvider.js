@@ -44,7 +44,8 @@ class ServerProvider extends Component {
   createNewAccount = async () => {
     invariant(this.state.sdk, 'ServerProvider not initialized yet');
     const keys = this.state.sdk.Keypair.random();
-    await (await fetch(`${process.env.REACT_APP_HORIZON_URL}/friendbot?addr=${keys.publicKey()}`)).json();
+    const res = await fetch(`${process.env.REACT_APP_HORIZON_URL}/friendbot?addr=${keys.publicKey()}`);
+    if (res.status !== 200) return;
     return {
       publicKey: keys.publicKey(),
       secret: keys.secret(),
