@@ -52,7 +52,7 @@ export default function(props) {
   const waitCount = playerCount + 1 - botCount;
   return (
     <X>
-      <Text fontSize={14} m={10} style={{ minHeight: '56px' }}>
+      <Text fontSize={14} m={10} style={{ minHeight: '48px' }}>
         {waitCount > 0
           ? `Conjuring ${waitCount <= playerCount ? `${waitCount} more` : 'some'} bot${waitCount > 1 ? 's' : ''}...`
           : textFactory(props)}
