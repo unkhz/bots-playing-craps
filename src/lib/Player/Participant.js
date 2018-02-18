@@ -1,18 +1,6 @@
 import React, { Component } from 'react';
 import ease from 'eases/bounce-out';
-import {
-  Absolute,
-  Relative,
-  Box,
-  Panel,
-  PanelHeader,
-  PanelFooter,
-  BackgroundImage,
-  Subhead,
-  Code,
-  Text,
-  NavLink,
-} from 'rebass';
+import { Absolute, Relative, Box, Panel, PanelHeader, PanelFooter, BackgroundImage, Subhead, Code, Text } from 'rebass';
 
 import './Participant.css';
 
@@ -53,11 +41,11 @@ const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'bl
       <a href={derefereredUrl} style={{ textDecoration: 'none', color: 'inherit' }}>
         <Panel width="100%" style={{ backgroundColor: panelBackgroundColor }}>
           <PanelHeader p={0} style={{ border: '0 solid black' }}>
-            <div className="participant">
+            <span className="participant">
               <Code p={1} style={{ whiteSpace: 'pre', fontSize: 6, display: 'block' }}>
                 {player.accountId.match(/.{1,14}/g).join('\n')}
               </Code>
-            </div>
+            </span>
           </PanelHeader>
           <Relative>
             <Absolute style={{ width: '100%' }}>
