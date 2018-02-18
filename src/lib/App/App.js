@@ -12,7 +12,7 @@ import Bots from 'lib/Bots/Bots';
 
 import './App.css';
 
-const PLAYER_BOT_COUNT = 2;
+const PLAYER_BOT_COUNT = 5;
 
 const WithGameContext = withDefinedContext(GameContext);
 
