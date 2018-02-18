@@ -26,10 +26,13 @@ const App = (props) => {
             <Banner
               className="banner"
               color="white"
-              bg="gray8"
               backgroundImage="https://images.unsplash.com/photo-1515606378517-3451a4fa2e12?fit=crop&w=1800&q=80"
+              style={{ textShadow: '0 0 6px #000000' }}
             >
               <Heading>Bots playing craps</Heading>
+              <Text className="subheading" m={2} style={{ lineHeight: 1.2 }}>
+                a linear finite state machine + some bots making random transactions on Stellar Lumens testnet network
+              </Text>
             </Banner>
             <Relative style={{ boxSizing: 'border-box', minHeight: '82vh', paddingBottom: 200 }}>
               <WithGameContext waitNode={<Text>Creating game...</Text>}>

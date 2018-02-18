@@ -93,7 +93,7 @@ const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'bl
               }}
             </ChangeObserver>
           </Relative>
-          <PanelFooter style={{ minHeight: '36px', border: '0 solid black' }}>{footer}</PanelFooter>
+          <PanelFooter style={{ minHeight: '48px', border: '0 solid black' }}>{footer}</PanelFooter>
         </Panel>
       </a>
     </Box>
