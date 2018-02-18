@@ -31,7 +31,8 @@ const App = (props) => {
             >
               <Heading>Bots playing craps</Heading>
               <Text className="subheading" m={2} style={{ lineHeight: 1.2 }}>
-                a linear finite state machine + some bots making random transactions on Stellar Lumens testnet network
+                a linear finite state machine + some bots making random transactions on Stellar Lumens testnet
+                blockchain
               </Text>
             </Banner>
             <Relative style={{ boxSizing: 'border-box', minHeight: '82vh', paddingBottom: 200 }}>
