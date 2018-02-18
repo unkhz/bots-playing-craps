@@ -14,6 +14,8 @@ import {
   NavLink,
 } from 'rebass';
 
+import './Participant.css';
+
 const COLOR_LIFETIME = 2000;
 
 class ChangeObserver extends Component {
@@ -49,8 +51,8 @@ const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'bl
   return (
     <Box w={1 / 4} m={2} flex="1 1 auto" style={{ minWidth: 50, maxWidth: 150 }}>
       <Panel width="100%" style={{ backgroundColor: panelBackgroundColor }}>
-        <PanelHeader p={0}>
-          <NavLink p={1} href={derefereredUrl}>
+        <PanelHeader p={0} style={{ border: '0 solid black' }}>
+          <NavLink p={1} href={derefereredUrl} className="participant">
             <Code style={{ whiteSpace: 'pre', fontSize: 6 }}>{player.accountId.match(/.{1,14}/g).join('\n')}</Code>
           </NavLink>
         </PanelHeader>
@@ -90,7 +92,7 @@ const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'bl
             }}
           </ChangeObserver>
         </Relative>
-        <PanelFooter style={{ minHeight: '36px' }}>{footer}</PanelFooter>
+        <PanelFooter style={{ minHeight: '36px', border: '0 solid black' }}>{footer}</PanelFooter>
       </Panel>
     </Box>
   );

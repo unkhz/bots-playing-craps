@@ -10,6 +10,8 @@ import Player from 'lib/Player/Player';
 import Dealer from 'lib/Player/Dealer';
 import Bots from 'lib/Bots/Bots';
 
+import './App.css';
+
 const PLAYER_BOT_COUNT = 2;
 
 const WithGameContext = withDefinedContext(GameContext);
@@ -22,7 +24,7 @@ const App = (props) => {
           <Bots playerCount={PLAYER_BOT_COUNT} />
           <Relative style={{ textAlign: 'center' }}>
             <Banner
-              style={{ boxSizing: 'border-box', minHeight: '18vh' }}
+              className="banner"
               color="white"
               bg="gray8"
               backgroundImage="https://images.unsplash.com/photo-1515606378517-3451a4fa2e12?fit=crop&w=1800&q=80"
