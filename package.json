@@ -17,10 +17,12 @@
     "react-share": "^2.0.0",
     "react-svg-inline": "^2.1.0",
     "rebass": "^1.0.4",
+    "serve": "^6.4.11",
     "store": "^2.0.12"
   },
   "scripts": {
-    "start": "NODE_PATH=src react-scripts start",
+    "start": "NODE_PATH=src react-scripts build && serve -s build",
+    "dev": "NODE_PATH=src react-scripts start",
     "build": "NODE_PATH=src react-scripts build",
     "test": "NODE_PATH=src react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
