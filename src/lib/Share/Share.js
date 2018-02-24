@@ -11,7 +11,7 @@ const shares = [
   [FacebookShareButton, FacebookIcon],
   [TwitterShareButton, TwitterIcon],
   [
-    ({ children }) => <a href="https://github.com/unkhz">{children}</a>,
+    ({ children }) => <a href="https://github.com/unkhz/bots-playing-craps">{children}</a>,
     (props) => (
       <InlineBlock
         style={{
