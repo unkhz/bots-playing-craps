@@ -43,7 +43,15 @@ const App = (props) => {
             some bots making random transactions on Stellar Lumens testnet blockchain
           </Text>
         </Banner>
-        <Relative style={{ boxSizing: 'border-box', minHeight: '82vh', paddingBottom: 200 }}>
+        <Relative
+          style={{
+            boxSizing: 'border-box',
+            minHeight: '82vh',
+            paddingBottom: 200,
+            maxWidth: '850px',
+            margin: '0 auto',
+          }}
+        >
           <Intro>
             <ServerProvider>
               <GameProvider>
