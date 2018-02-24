@@ -9,9 +9,13 @@
     "immutability-helper": "^2.6.4",
     "invariant": "^2.2.2",
     "javascript-state-machine": "^3.0.1",
+    "octicons": "^7.1.0",
     "react": "^16.3.0-alpha.0",
     "react-dom": "^16.2.0",
+    "react-grecaptcha": "^1.2.5",
     "react-scripts": "1.1.0",
+    "react-share": "^2.0.0",
+    "react-svg-inline": "^2.1.0",
     "rebass": "^1.0.4",
     "store": "^2.0.12"
   },

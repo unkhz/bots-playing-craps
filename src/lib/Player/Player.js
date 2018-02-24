@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, Badge } from 'rebass';
-
+import { Text } from 'rebass';
+import { RollResult } from 'lib/Common/Common';
 import Participant from './Participant';
 
 const Player = (props) => {
@@ -14,17 +14,7 @@ const Player = (props) => {
         bet ? (
           <Text>
             <b>{Math.round(bet.amount)}</b> on{' '}
-            <Badge
-              color={bet.betOnPass ? 'black' : 'white'}
-              bg={bet.betOnPass ? 'white' : 'black'}
-              style={{
-                border: '1px solid black',
-                textTransform: 'uppercase',
-                fontSize: '8px',
-              }}
-            >
-              {bet.betOnPass ? 'pass' : 'fail'}
-            </Badge>
+            <RollResult pass={bet.betOnPass}>{bet.betOnPass ? 'pass' : 'fail'}</RollResult>
           </Text>
         ) : lastWin ? (
           <Text>

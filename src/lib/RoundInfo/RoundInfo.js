@@ -1,5 +1,6 @@
 import React, { Fragment as X } from 'react';
 import { Text } from 'rebass';
+import { Strong } from 'lib/Common/Common';
 import {
   STATE_IDLE,
   STATE_PLACING_BETS,
@@ -28,7 +29,7 @@ const names = (list) => {
 const dice = ([first, second]) => {
   return (
     <X>
-      <b style={{ fontSize: '24px' }}>{first}</b> and <b style={{ fontSize: '24px' }}>{second}</b>
+      <Strong>{first}</Strong> and <Strong>{second}</Strong>
     </X>
   );
 };
@@ -52,7 +53,7 @@ export default function(props) {
   const waitCount = playerCount + 1 - botCount;
   return (
     <X>
-      <Text fontSize={14} m={10} style={{ minHeight: '48px' }}>
+      <Text m={10} style={{ minHeight: '48px' }}>
         {waitCount > 0
           ? `Conjuring ${waitCount <= playerCount ? `${waitCount} more` : 'some'} bot${waitCount > 1 ? 's' : ''}...`
           : textFactory(props)}
