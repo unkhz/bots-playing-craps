@@ -5,7 +5,7 @@ import { Absolute } from 'rebass';
 import SVGInline from 'react-svg-inline';
 
 import { InlineBlock } from 'lib/Common/Common';
-console.log(octicons);
+
 const SIZE = 24;
 const shares = [
   [FacebookShareButton, FacebookIcon],
