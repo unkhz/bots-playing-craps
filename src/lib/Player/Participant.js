@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ease from 'eases/bounce-out';
-import { Absolute, Relative, Box, Panel, PanelHeader, PanelFooter, BackgroundImage, Subhead, Code, Text } from 'rebass';
+import { Absolute, Relative, Box, Panel, BackgroundImage, Subhead, Code, Text } from 'rebass';
 
 import './Participant.css';
 
@@ -37,21 +37,21 @@ const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'bl
   const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${player.accountId}`;
   const derefereredUrl = `http://www.dereferer.org/?${encodeURIComponent(actualUrl)}`;
   return (
-    <Box w={1 / 4} m={2} flex="1 1 auto" style={{ minWidth: 50, maxWidth: 150 }}>
+    <Box m={2} w={[100, 150, 200]} flex="0 0 auto">
       <a href={derefereredUrl} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <Panel width="100%" style={{ backgroundColor: panelBackgroundColor }}>
-          <PanelHeader p={0} style={{ border: '0 solid black' }}>
+        <Panel width="100%" bg={panelBackgroundColor}>
+          <Panel.Header p={0} bg="panelBackgroundColor" style={{ border: '0 solid black' }}>
             <span className="participant-address">
               <Code p={1} style={{ whiteSpace: 'pre', fontSize: 6, display: 'block' }}>
                 {player.accountId.match(/.{1,14}/g).join('\n')}
               </Code>
             </span>
-          </PanelHeader>
+          </Panel.Header>
           <Relative>
             <Absolute style={{ width: '100%' }}>
               <Subhead
                 m={2}
-                fontSize={[24, 32]}
+                fontSize={[20, 24, 32]}
                 style={{
                   fontFamily: "'Indie Flower', cursive",
                   textTransform: 'uppercase',
@@ -83,7 +83,9 @@ const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'bl
               }}
             </ChangeObserver>
           </Relative>
-          <PanelFooter style={{ minHeight: '48px', border: '0 solid black' }}>{footer}</PanelFooter>
+          <Panel.Footer bg="panelBackgroundColor" style={{ minHeight: '61px', border: '0 solid black' }}>
+            {footer}
+          </Panel.Footer>
         </Panel>
       </a>
     </Box>

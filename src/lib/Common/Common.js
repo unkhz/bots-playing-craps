@@ -3,8 +3,8 @@ import { Badge, Text, Relative } from 'rebass';
 
 export const RollResult = ({ pass, fail, children, style, ...passedProps }) => (
   <Badge
-    color={!fail ? 'black' : 'white'}
-    bg={!fail ? 'white' : 'black'}
+    color={pass ? 'black' : 'white'}
+    bg={pass ? 'white' : 'black'}
     style={{ border: '1px solid black', textTransform: 'uppercase', fontSize: '8px', ...style }}
     {...passedProps}
   >

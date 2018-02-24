@@ -21,7 +21,15 @@ const WithGameContext = withDefinedContext(GameContext);
 
 const App = (props) => {
   return (
-    <ThemeProvider theme={{ font: 'Athiti, sans-serif' }}>
+    <ThemeProvider
+      theme={{
+        fonts: {
+          sans: 'Athiti, sans-serif',
+          cursive: "'Indie Flower', cursive",
+          mono: "'Andale Mono', monospace",
+        },
+      }}
+    >
       <Relative style={{ textAlign: 'center' }}>
         <Banner
           className="banner"
@@ -43,7 +51,7 @@ const App = (props) => {
                 <WithGameContext waitNode={<Text>Creating game...</Text>}>
                   {({ roundStatus, isRoundActive, placeBets, stop, bets, dice, players, dealer, winners }) => (
                     <Fragment>
-                      <Flex wrap justify="center">
+                      <Flex flexWrap="wrap" justifyContent="center">
                         {players &&
                           players
                             .sort((a, b) => (a.accountId > b.accountId ? 1 : -1))
