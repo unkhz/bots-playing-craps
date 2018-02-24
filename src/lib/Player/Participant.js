@@ -41,7 +41,7 @@ const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'bl
       <a href={derefereredUrl} style={{ textDecoration: 'none', color: 'inherit' }}>
         <Panel width="100%" style={{ backgroundColor: panelBackgroundColor }}>
           <PanelHeader p={0} style={{ border: '0 solid black' }}>
-            <span className="participant">
+            <span className="participant-address">
               <Code p={1} style={{ whiteSpace: 'pre', fontSize: 6, display: 'block' }}>
                 {player.accountId.match(/.{1,14}/g).join('\n')}
               </Code>

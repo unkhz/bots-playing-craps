@@ -1,5 +1,5 @@
 @media screen and (max-width: 640px) {
-  .participant {
+  #root .participant-address {
     display: none;
   }
 }
