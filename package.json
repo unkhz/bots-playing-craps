@@ -6,7 +6,6 @@
     "create-react-context": "^0.1.6",
     "dog-names": "^1.0.2",
     "eases": "^1.0.8",
-    "immutability-helper": "^2.6.4",
     "invariant": "^2.2.2",
     "javascript-state-machine": "^3.0.1",
     "octicons": "^7.1.0",
