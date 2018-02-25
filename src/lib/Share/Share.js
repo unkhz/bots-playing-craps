@@ -30,8 +30,8 @@ const shares = [
 
 export default () => (
   <Absolute m={1} style={{ top: 0, right: 0, textAlign: 'right', display: 'flex', textShadow: 'none' }}>
-    {shares.map(([Button, Icon]) => (
-      <InlineBlock m={1} style={{ cursor: 'pointer' }}>
+    {shares.map(([Button, Icon], key) => (
+      <InlineBlock key={key} m={1} style={{ cursor: 'pointer' }}>
         <Button url="https://bots-playing-craps.khz.fi/">
           {Icon && <Icon size={SIZE} iconBgStyle={{ fill: '#000000' }} round />}
         </Button>
