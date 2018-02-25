@@ -12,6 +12,10 @@ export default class Intro extends Component {
     isVerified: store.get(STORE_KEY) === STORE_VALUE,
   };
 
+  componentDidMount() {
+    window.gtag('event', 'view_intro');
+  }
+
   handleVerified = () => {
     this.setState({ isVerified: true });
     store.set(STORE_KEY, STORE_VALUE);

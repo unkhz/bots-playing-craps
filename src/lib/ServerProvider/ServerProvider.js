@@ -45,7 +45,11 @@ class ServerProvider extends Component {
     invariant(this.state.sdk, 'ServerProvider not initialized yet');
     const keys = this.state.sdk.Keypair.random();
     const res = await fetch(`${process.env.REACT_APP_HORIZON_URL}/friendbot?addr=${keys.publicKey()}`);
-    if (res.status !== 200) return;
+    if (res.status !== 200) {
+      window.gtag('event', 'create_account_failed');
+      return;
+    }
+    window.gtag('event', 'create_account_success');
     return {
       publicKey: keys.publicKey(),
       secret: keys.secret(),

@@ -90,6 +90,7 @@ class GameProvider extends Component {
   }
 
   handlePlaceBets = async () => {
+    window.gtag('event', 'start_round');
     this.update();
     await think(2000);
     this.operate(this.fsm.waitForTransactions);
