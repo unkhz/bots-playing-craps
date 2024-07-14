@@ -4,7 +4,7 @@ import octicons from 'octicons';
 import { Absolute } from 'rebass';
 import SVGInline from 'react-svg-inline';
 
-import { InlineBlock } from 'lib/Common/Common';
+import { InlineBlock } from '../Common/Common';
 
 const SIZE = 24;
 const shares = [

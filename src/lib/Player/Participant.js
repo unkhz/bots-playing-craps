@@ -73,7 +73,9 @@ const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'bl
                 const alpha = ease(life) / 3 || 0;
                 const backgroundColor =
                   alpha >= 0
-                    ? isPositive ? `rgba(128, 255, 128, ${alpha})` : `rgba(255, 128, 128, ${alpha})`
+                    ? isPositive
+                      ? `rgba(128, 255, 128, ${alpha})`
+                      : `rgba(255, 128, 128, ${alpha})`
                     : 'transparent';
                 return (
                   <Text fontSize={14} m={1} style={{ backgroundColor, borderRadius: '4px' }}>

@@ -1,6 +1,6 @@
 import React, { Fragment as X } from 'react';
 import { Text } from 'rebass';
-import { Strong } from 'lib/Common/Common';
+import { Strong } from '../Common/Common';
 import {
   STATE_IDLE,
   STATE_PLACING_BETS,
@@ -9,7 +9,7 @@ import {
   STATE_REROLLING,
   STATE_DECIDING_WINS,
   STATE_COLLECTING_WINS,
-} from 'lib/GameProvider/GameProvider';
+} from '../GameProvider/GameProvider';
 
 const delimiterByItemsLeft = { 0: ' ', 1: ' and ' };
 const names = (list) => {
@@ -46,7 +46,7 @@ const texts = {
     props.winners.length ? <X>{names(props.winners)} won, confirming XLM transactions</X> : 'no winners this round',
 };
 
-export default function(props) {
+export default function (props) {
   const { roundStatus, players, dealer, playerCount } = props;
   const textFactory = texts[roundStatus] || texts[STATE_IDLE];
   const botCount = (dealer ? 1 : 0) + players.length;

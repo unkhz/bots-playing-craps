@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import Recaptcha from 'react-grecaptcha';
 import store from 'store';
 import { Absolute, Relative, Heading, Text } from 'rebass';
-import { RollResult, Strong, ShowMore } from 'lib/Common/Common';
+import { RollResult, Strong, ShowMore } from '../Common/Common';
 
 const STORE_KEY = '9F08E5DE-63D9-417B-B557-4BDE6FFF2103';
 const STORE_VALUE = 'B4538960-2222-458E-A417-6FC5874C5DDB';

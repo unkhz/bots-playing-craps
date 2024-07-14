@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import createContext from 'create-react-context';
 import StateMachine from 'javascript-state-machine';
 import invariant from 'invariant';
-import { ServerContext } from 'lib/ServerProvider/ServerProvider';
+import { ServerContext } from '../ServerProvider/ServerProvider';
 
 const sum = (dice) => dice.reduce((r, v) => r + v, 0);
 const randomInteger = (min, max) => min + Math.round(Math.random() * (max - min));
@@ -98,7 +98,9 @@ class GameProvider extends Component {
 
   handleWaitForTransactions = async () => {
     const { dealer } = this.state.context;
-    const { serverContext: { scanTransactions, verifyTransaction } } = this.props;
+    const {
+      serverContext: { scanTransactions, verifyTransaction },
+    } = this.props;
     this.update();
     const { bets } = this.state.context;
     const verified = [];
@@ -155,8 +157,8 @@ class GameProvider extends Component {
       accountId,
       name,
       expectedTransactionMemo: uniqueMemo(),
-      win: Math.floor(amount / totalWinningBets * pot),
-      amount: Math.floor(amount / totalWinningBets * pot),
+      win: Math.floor((amount / totalWinningBets) * pot),
+      amount: Math.floor((amount / totalWinningBets) * pot),
     }));
     if (winners.length === 0) console.log('No winners this round');
     winners.forEach(({ name, amount }) => console.log(`${name} won ${amount} XLM`));
@@ -170,7 +172,9 @@ class GameProvider extends Component {
       this.update({}, {}, this.fsm.stop);
       return;
     }
-    const { serverContext: { scanTransactions, verifyTransaction } } = this.props;
+    const {
+      serverContext: { scanTransactions, verifyTransaction },
+    } = this.props;
     this.update();
     const verifiedMemos = [];
     const isOk = (tx, win) =>
@@ -220,7 +224,10 @@ class GameProvider extends Component {
   };
 
   updatePlayer = (accountId, model) => {
-    invariant(this.state.context.players.some((p) => p.accountId === accountId), 'Trying to update unknown player');
+    invariant(
+      this.state.context.players.some((p) => p.accountId === accountId),
+      'Trying to update unknown player'
+    );
     this.setContext((context) => {
       const player = context.players.find((p) => p.accountId === accountId);
       const otherPlayers = context.players.filter((p) => p.accountId !== accountId);

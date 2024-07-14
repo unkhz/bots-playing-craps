@@ -2,16 +2,16 @@ import React, { Fragment } from 'react';
 
 import { Provider as ThemeProvider, Relative, Absolute, Banner, Heading, Flex, Button, Text } from 'rebass';
 
-import Share from 'lib/Share/Share';
-import Intro from 'lib/Intro/Intro';
-import ServerProvider from 'lib/ServerProvider/ServerProvider';
-import GameProvider, { GameContext } from 'lib/GameProvider/GameProvider';
-import withDefinedContext from 'lib/withDefinedContext/withDefinedContext';
+import Share from '../Share/Share';
+import Intro from '../Intro/Intro';
+import ServerProvider from '../ServerProvider/ServerProvider';
+import GameProvider, { GameContext } from '../GameProvider/GameProvider';
+import withDefinedContext from '../withDefinedContext/withDefinedContext';
 
-import RoundInfo from 'lib/RoundInfo/RoundInfo';
-import Player from 'lib/Player/Player';
-import Dealer from 'lib/Player/Dealer';
-import Bots from 'lib/Bots/Bots';
+import RoundInfo from '../RoundInfo/RoundInfo';
+import Player from '../Player/Player';
+import Dealer from '../Player/Dealer';
+import Bots from '../Bots/Bots';
 
 import './App.css';
 

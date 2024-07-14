@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { all as names } from 'dog-names';
 
-import { ServerContext } from 'lib/ServerProvider/ServerProvider';
-import { GameContext, STATE_DECIDING_WINS, STATE_COLLECTING_WINS } from 'lib/GameProvider/GameProvider';
+import { ServerContext } from '../ServerProvider/ServerProvider';
+import { GameContext, STATE_DECIDING_WINS, STATE_COLLECTING_WINS } from '../GameProvider/GameProvider';
 
 // @see http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
 const hashCode = (str) => {
@@ -18,14 +18,19 @@ const hashCode = (str) => {
 
 class DealerBot extends Component {
   componentDidMount() {
-    const { account: { account_id, balance } } = this.props;
+    const {
+      account: { account_id, balance },
+    } = this.props;
     const { registerDealer } = this.props.gameContext;
     registerDealer(this.getName(), account_id, this.getGameBalance(balance));
   }
 
   componentWillReceiveProps(nextProps) {
     const { gameContext: oldGameContext, account: oldAccount } = this.props;
-    const { gameContext, account: { accountId, balance } } = nextProps;
+    const {
+      gameContext,
+      account: { accountId, balance },
+    } = nextProps;
     if (oldGameContext.roundStatus === STATE_DECIDING_WINS && gameContext.roundStatus === STATE_COLLECTING_WINS) {
       this.payWinners();
     }
@@ -39,7 +44,11 @@ class DealerBot extends Component {
   }
 
   async payWinners() {
-    const { gameContext: { winners }, serverContext, identity } = this.props;
+    const {
+      gameContext: { winners },
+      serverContext,
+      identity,
+    } = this.props;
     const payments = [...winners];
     while (payments.length > 0) {
       const { accountId, expectedTransactionMemo, amount, name } = payments.pop();
@@ -58,7 +67,9 @@ class DealerBot extends Component {
   }
 
   getName() {
-    const { account: { account_id } } = this.props;
+    const {
+      account: { account_id },
+    } = this.props;
     return names[Math.abs(hashCode(account_id)) % names.length];
   }
 
@@ -77,6 +88,7 @@ export default (props) => (
           ) : null
         }
       </GameContext.Consumer>
-    )})
+    )}
+    )
   </ServerContext.Consumer>
 );

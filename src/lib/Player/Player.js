@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'rebass';
-import { RollResult } from 'lib/Common/Common';
+import { RollResult } from '../Common/Common';
 import Participant from './Participant';
 
 const Player = (props) => {

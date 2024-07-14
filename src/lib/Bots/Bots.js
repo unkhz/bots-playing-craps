@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { ServerContext } from 'lib/ServerProvider/ServerProvider';
+import { ServerContext } from '../ServerProvider/ServerProvider';
 import store from 'store';
 
 import PlayerBot from './PlayerBot';

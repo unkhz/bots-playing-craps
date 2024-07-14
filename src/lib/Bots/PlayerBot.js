@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { all as names } from 'dog-names';
 
-import { ServerContext } from 'lib/ServerProvider/ServerProvider';
-import { GameContext, STATE_IDLE, STATE_PLACING_BETS } from 'lib/GameProvider/GameProvider';
+import { ServerContext } from '../ServerProvider/ServerProvider';
+import { GameContext, STATE_IDLE, STATE_PLACING_BETS } from '../GameProvider/GameProvider';
 
 // @see http://erlycoder.com/49/javascript-hash-functions-to-convert-string-into-integer-hash-
 const hashCode = (str) => {
@@ -21,14 +21,19 @@ const think = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 class PlayerBot extends Component {
   componentDidMount() {
-    const { account: { accountId, balance } } = this.props;
+    const {
+      account: { accountId, balance },
+    } = this.props;
     const { registerPlayer } = this.props.gameContext;
     registerPlayer(this.getName(), accountId, balance);
   }
 
   componentWillReceiveProps(nextProps) {
     const { gameContext: oldGameContext, account: oldAccount } = this.props;
-    const { gameContext, account: { accountId, balance } } = nextProps;
+    const {
+      gameContext,
+      account: { accountId, balance },
+    } = nextProps;
     if (oldGameContext.roundStatus === STATE_IDLE && gameContext.roundStatus === STATE_PLACING_BETS) {
       this.thinkAndPlaceBet();
     }
@@ -59,7 +64,9 @@ class PlayerBot extends Component {
   }
 
   getName() {
-    const { account: { accountId } } = this.props;
+    const {
+      account: { accountId },
+    } = this.props;
     return names[Math.abs(hashCode(accountId)) % names.length];
   }
 
@@ -78,6 +85,7 @@ export default (props) => (
           ) : null
         }
       </GameContext.Consumer>
-    )})
+    )}
+    )
   </ServerContext.Consumer>
 );
