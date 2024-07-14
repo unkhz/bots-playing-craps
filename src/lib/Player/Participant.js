@@ -34,11 +34,10 @@ class ChangeObserver extends Component {
 }
 
 const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'black' }) => {
-  const actualUrl = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${player.accountId}`;
-  const derefereredUrl = `http://www.dereferer.org/?${encodeURIComponent(actualUrl)}`;
+  const url = `${process.env.REACT_APP_IDENTITY_BASE_URL}/${player.accountId}`;
   return (
     <Box m={2} w={[100, 150, 200]} flex="0 0 auto">
-      <a href={derefereredUrl} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <a href={url} style={{ textDecoration: 'none', color: 'inherit' }}>
         <Panel width="100%" bg={panelBackgroundColor}>
           <Panel.Header p={0} bg="panelBackgroundColor" style={{ border: '0 solid black' }}>
             <span className="participant-address">
@@ -63,7 +62,7 @@ const Participant = ({ player, bets, lastWin, footer, panelBackgroundColor = 'bl
             </Absolute>
             <BackgroundImage
               ratio={2 / 3}
-              src={`https://robohash.org/${player.accountId}.png`}
+              src={`https://robohash.org/${player.accountId}.png?set=set3`}
               style={{ height: '3vh' }}
             />
             <ChangeObserver observable={player.balance} lifeTime={COLOR_LIFETIME}>
