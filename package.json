@@ -1,5 +1,5 @@
 {
-  "name": "str",
+  "name": "bots-playing-craps",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -19,7 +19,6 @@
     "store": "^2.0.12"
   },
   "scripts": {
-    "start": "NODE_PATH=src react-scripts build && serve -s build",
     "dev": "NODE_PATH=src react-scripts start",
     "build": "NODE_PATH=src react-scripts build",
     "test": "NODE_PATH=src react-scripts test --env=jsdom",
