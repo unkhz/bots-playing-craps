@@ -5,4 +5,4 @@ resources:
   - deployment.yaml
 images:
   - name: ghcr.io/unkhz/bots-playing-craps:latest
-    newTag: 704f066054941d2981d289a75c7850a8f54ab1d0
+    newTag: 55d97013859ff5eec03274b224a60dfb5ac3d5b6
