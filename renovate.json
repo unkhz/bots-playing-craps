@@ -1,15 +1,33 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "reviewers": ["unkhz"],
+  "extends": [
+    "config:recommended"
+  ],
+  "reviewers": [
+    "unkhz"
+  ],
   "kubernetes": {
-    "managerFilePatterns": ["/(^|/)\\.khz-k3s/.+\\.ya?ml$/"]
+    "managerFilePatterns": [
+      "/(^|/)\\.khz-k3s/.+\\.ya?ml$/"
+    ]
   },
   "packageRules": [
     {
       "description": "App images are built by CI and bumped by its deploy commits, not Renovate",
-      "matchPackageNames": ["ghcr.io/unkhz/**"],
+      "matchPackageNames": [
+        "ghcr.io/unkhz/**"
+      ],
       "enabled": false
+    },
+    {
+      "description": "Majors may break: label them and never automerge; read release notes before merging",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "labels": [
+        "breaking-change"
+      ],
+      "automerge": false
     }
   ]
 }

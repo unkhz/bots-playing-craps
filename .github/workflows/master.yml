@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
 jobs:
   build:
     if: ${{ ! endsWith(github.event.head_commit.message, '[skip ci]') }}
