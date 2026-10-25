@@ -1,0 +1,44 @@
+# Minimal CI for pull requests (Renovate included): the master build without
+# pushing or deploying, plus a smoke test of the built image.
+# The legacy CRA test suite is not run: it fails under current Node/jsdom
+# (TextDecoder, CSS parsing) and has never run in CI; build + smoke test is the bar.
+name: Pull request
+'on':
+  pull_request: 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Setup node 20
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    - name: Run npm install
+      run: npm install
+    - name: Run dist build
+      run: |
+        echo "Run npm build..."
+        npm run build
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Build Docker image (no push)
+      uses: docker/build-push-action@v3
+      with:
+        context: "."
+        file: "./Dockerfile"
+        push: false
+        tags: pr-ci:latest
+        load: true
+    - name: 'Smoke test: container serves HTTP'
+      run: |
+        docker run -d --name pr-ci -p 8080:80 pr-ci:latest
+        for i in $(seq 1 20); do
+          code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/ || true)
+          if [ "$code" != "000" ]; then break; fi
+          sleep 1
+        done
+        echo "HTTP $code"
+        docker logs pr-ci
+        [ "$code" != "000" ] && [ "$code" -lt 500 ]
